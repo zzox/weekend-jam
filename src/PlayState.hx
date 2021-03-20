@@ -8,10 +8,12 @@ import flixel.system.scaleModes.PixelPerfectScaleMode;
 class PlayState extends FlxState {
     static inline final ENEMY_POOL_SIZE = 10;
     static inline final PROJ_POOL_SIZE = 100;
+    static inline final EXPLOSION_POOL_SIZE = 20;
 
     var player:Player;
     var enemies:FlxTypedGroup<Enemy>;
     var projectiles:FlxTypedGroup<Projectile>;
+    var explosions:FlxTypedGroup<Explosion>;
 
     override public function create() {
         super.create();
@@ -42,6 +44,14 @@ class PlayState extends FlxState {
         }
         add(projectiles);
 
+        explosions = new FlxTypedGroup<Explosion>(EXPLOSION_POOL_SIZE);
+        for (_ in 0...EXPLOSION_POOL_SIZE) {
+            var explo = new Explosion();
+            explo.kill();
+            explosions.add(explo);
+        }
+        add(explosions);
+
         createEnemy();
         createEnemy();
         createEnemy();
@@ -63,16 +73,24 @@ class PlayState extends FlxState {
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
         enemy.kill();
+        createExplosion(enemy.x, enemy.y);
         player.kill();
+        createExplosion(player.x, player.y);
     }
 
     function overlapProjectileWithEnemy (proj:Projectile, enemy:Enemy) {
         proj.kill();
+        createExplosion(enemy.x, enemy.y);
         enemy.kill();
     }
 
     public function shoot (x:Float, y:Float, velocity:Float) {
         var proj = projectiles.recycle(Projectile);
         proj.shoot(x, y, null, -velocity);
+    }
+
+    public function createExplosion (x:Float, y:Float) {
+        var exp = explosions.recycle(Explosion);
+        exp.explode(x, y);
     }
 }
