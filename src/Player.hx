@@ -9,12 +9,20 @@ typedef HoldsObj = {
 }
 
 class Player extends FlxSprite {
+    var scene:PlayState;
     var holds:HoldsObj;
+
+    var shootTime:Float;
 
     static inline final ACCELERATION = 800;
 
-    public function new (x:Float, y:Float) {
+    // TODO: MD: for each weapon
+    static inline final BULLET_RELOAD_TIME = 0.2;
+    static inline final SHOOT_VELOCITY = 240;
+
+    public function new (x:Float, y:Float, scene:PlayState) {
         super(x, y);
+        this.scene = scene;
 
         loadGraphic(AssetPaths.player_ship__png, true, 16, 16);
         offset.set(5, 5);
@@ -30,24 +38,23 @@ class Player extends FlxSprite {
         };
 
         drag.set(1500, 1000);
-
         maxVelocity.set(180, 120);
-        // set drag
-        // acceleration
-            // correlate with axes
             // later: differences between up/down and left/right
         // collide with walls
-        // change resolution
+
+        shootTime = 0;
     }
 
     override public function update (elapsed:Float) {
         animation.play('fly');
 
         handleInputs(elapsed);
+        shootTime -= elapsed;
 
         super.update(elapsed);
     }
 
+    // TODO: should logic go in playState?
     function handleInputs (elapsed:Float) {
         var upDownVel:Float = 0.0;
         var leftRightVel:Float = 0.0;
@@ -97,5 +104,11 @@ class Player extends FlxSprite {
         }
 
         acceleration.set(leftRightVel * ACCELERATION * 1.5, upDownVel * ACCELERATION);
+
+        if (FlxG.keys.anyPressed([SPACE, Z]) && shootTime < 0) {
+            trace(getHitbox().width);
+            scene.shoot(x + (getHitbox().width / 2), y, SHOOT_VELOCITY);
+            shootTime = BULLET_RELOAD_TIME;
+        }
     }
 }
