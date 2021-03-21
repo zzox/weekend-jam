@@ -1,5 +1,6 @@
 package actors;
 
+import data.Constants as Const;
 import flixel.FlxSprite;
 
 enum EnemyPattern {
@@ -12,9 +13,11 @@ typedef PatternInfo = {
 
 class Enemy extends FlxSprite {
     var pattern:EnemyPattern;
+    var scene:PlayState;
 
-    public function new () {
+    public function new (scene:PlayState) {
         super(0, 0);
+        this.scene = scene;
 
         loadGraphic(AssetPaths.small_red_twin__png, true, 16, 16);
 
@@ -37,6 +40,16 @@ class Enemy extends FlxSprite {
 
     override public function update (elapsed:Float) {
         animation.play('idle');
+
+        if (y > Const.BOTTOM_END) {
+            kill();
+        }
+
         super.update(elapsed);
+    }
+
+    override public function kill () {
+        super.kill();
+        scene.livingEnemies--;
     }
 }
