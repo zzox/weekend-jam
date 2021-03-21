@@ -36,6 +36,9 @@ class Structures {
         return items;
     }
 
+    /**
+        take the percentage of the width from the structure and interpolate into a y position
+    **/
     static function formulateDistance (value:Float):Int {
         return Math.floor(Const.LEFT_BUMPER + value * (
             Const.RIGHT_BUMPER - Const.LEFT_BUMPER
