@@ -1,6 +1,7 @@
 package;
 
 import data.Constants as Const;
+import data.Structures;
 import data.Waves;
 import actors.Player;
 import actors.Enemy;
@@ -73,7 +74,7 @@ class PlayState extends FlxState {
         }
         add(explosions);
 
-        worldName = "space-1";
+        worldName = "space-1"; // MD: pass into state
         waveIndex = 0;
         subwaveIndex = 0;
         gameTime = -PREROUND_TIME;
@@ -110,8 +111,11 @@ class PlayState extends FlxState {
         } else {
             var subwaveItem = Waves.data[worldName][waveIndex][subwaveIndex];
             if (gameTime > subwaveItem.time) {
-                for (_ in 0...subwaveItem.quantity) {
-                    createEnemy();
+
+                var enemyShape:Array<Int> = Structures.getStructure(subwaveItem.shape, subwaveItem.quantity);
+
+                for (xPos in enemyShape) {
+                    createEnemy(xPos, Const.ENEMY_START_Y);
                 }
 
                 subwaveIndex++;
@@ -124,10 +128,10 @@ class PlayState extends FlxState {
         }
     }
 
-    function createEnemy () {
+    function createEnemy (x:Int, y:Int) {
         livingEnemies++;
         var enemy = enemies.recycle(Enemy);
-        enemy.start(Math.random() * 120 + 20, -32, Direct, { yVel: 30 });
+        enemy.start(x, y, Direct, { yVel: 30 });
     }
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
