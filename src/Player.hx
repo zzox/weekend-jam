@@ -17,7 +17,7 @@ class Player extends FlxSprite {
     static inline final ACCELERATION = 800;
 
     // TODO: MD: for each weapon
-    static inline final BULLET_RELOAD_TIME = 0.2;
+    static inline final BULLET_RELOAD_TIME = 0.01;
     static inline final SHOOT_VELOCITY = 240;
 
     static inline final LEFT_BUMPER = 6;

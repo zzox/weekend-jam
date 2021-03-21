@@ -1,8 +1,9 @@
 package;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxState;
 import flixel.FlxG;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxPoint;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
 
 class PlayState extends FlxState {
@@ -17,6 +18,11 @@ class PlayState extends FlxState {
 
     override public function create() {
         super.create();
+
+        // PROD: remove this vvv
+        // requires `-debug` flag
+        FlxG.debugger.visible = true;
+        FlxG.debugger.drawDebug = true;
 
         FlxG.mouse.visible = false;
 
@@ -73,14 +79,14 @@ class PlayState extends FlxState {
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
         enemy.kill();
-        createExplosion(enemy.x, enemy.y);
+        createExplosion(Utils.getSpriteCenter(enemy));
         player.kill();
-        createExplosion(player.x, player.y);
+        createExplosion(Utils.getSpriteCenter(player));
     }
 
     function overlapProjectileWithEnemy (proj:Projectile, enemy:Enemy) {
         proj.kill();
-        createExplosion(enemy.x, enemy.y);
+        createExplosion(Utils.getSpriteCenter(enemy));
         enemy.kill();
     }
 
@@ -89,8 +95,8 @@ class PlayState extends FlxState {
         proj.shoot(x, y, null, -velocity);
     }
 
-    public function createExplosion (x:Float, y:Float) {
+    public function createExplosion (point:FlxPoint) {
         var exp = explosions.recycle(Explosion);
-        exp.explode(x, y);
+        exp.explode(point.x, point.y);
     }
 }

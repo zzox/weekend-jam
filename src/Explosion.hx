@@ -10,8 +10,11 @@ class Explosion extends FlxSprite {
         animation.finishCallback = finishAnimation;
     }
 
+    /**
+        Set with ship origin to origin so this explosion can be launched from the center
+    **/
     public function explode (x:Float, y:Float) {
-        setPosition(x, y);
+        setPosition(x - (width / 2), y - (height / 2));
         animation.play('explode');
     }
 
