@@ -1,5 +1,7 @@
 package;
 
+import data.Constants as Const;
+import data.Waves;
 import actors.Player;
 import actors.Enemy;
 import display.Explosion;
@@ -11,14 +13,23 @@ import flixel.system.scaleModes.PixelPerfectScaleMode;
 import objects.Projectile;
 
 class PlayState extends FlxState {
-    static inline final ENEMY_POOL_SIZE = 10;
+    static inline final ENEMY_POOL_SIZE = 100;
     static inline final PROJ_POOL_SIZE = 100;
     static inline final EXPLOSION_POOL_SIZE = 20;
+    static inline final PREROUND_TIME = 3;
 
     var player:Player;
     var enemies:FlxTypedGroup<Enemy>;
     var projectiles:FlxTypedGroup<Projectile>;
     var explosions:FlxTypedGroup<Explosion>;
+
+    var worldName:String;
+    var waveIndex:Int;
+    var subwaveIndex:Int;
+    var gameTime:Float;
+
+    public var livingEnemies:Int;
+    var subwavesDone:Bool;
 
     override public function create() {
         super.create();
@@ -40,7 +51,7 @@ class PlayState extends FlxState {
 
         enemies = new FlxTypedGroup<Enemy>(ENEMY_POOL_SIZE);
         for (_ in 0...ENEMY_POOL_SIZE) {
-            var enemy = new Enemy();
+            var enemy = new Enemy(this);
             enemy.kill();
             enemies.add(enemy);
         }
@@ -62,11 +73,13 @@ class PlayState extends FlxState {
         }
         add(explosions);
 
-        createEnemy();
-        createEnemy();
-        createEnemy();
-        createEnemy();
-        createEnemy();
+        worldName = "space-1";
+        waveIndex = 0;
+        subwaveIndex = 0;
+        gameTime = -PREROUND_TIME;
+
+        livingEnemies = 0;
+        subwavesDone = false;
     }
 
     override public function update(elapsed:Float) {
@@ -74,9 +87,45 @@ class PlayState extends FlxState {
 
         FlxG.overlap(enemies, player, overlapPlayerWithEnemy);
         FlxG.overlap(projectiles, enemies, overlapProjectileWithEnemy);
+
+        handleEnemySpawn(elapsed);
+    }
+
+    function handleEnemySpawn (elapsed:Float) {
+        gameTime += elapsed;
+
+        // if we haven't released all the subwaves, we check times here
+        if (subwavesDone) {
+            if (livingEnemies == 0) {
+                if (waveIndex == Waves.data[worldName].length) {
+                    trace('level complete!!!');
+                } else {
+                    subwavesDone = false;
+                    waveIndex++;
+                    subwaveIndex = 0;
+                    gameTime = 0;
+                }
+            }
+            trace(livingEnemies);
+        } else {
+            var subwaveItem = Waves.data[worldName][waveIndex][subwaveIndex];
+            if (gameTime > subwaveItem.time) {
+                for (_ in 0...subwaveItem.quantity) {
+                    createEnemy();
+                }
+
+                subwaveIndex++;
+
+                // check to see enemyCount if we should go to the next wave
+                if (subwaveIndex == Waves.data[worldName][waveIndex].length) {
+                    subwavesDone = true;
+                }
+            }
+        }
     }
 
     function createEnemy () {
+        livingEnemies++;
         var enemy = enemies.recycle(Enemy);
         enemy.start(Math.random() * 120 + 20, -32, Direct, { yVel: 30 });
     }
@@ -99,7 +148,7 @@ class PlayState extends FlxState {
         proj.shoot(x, y, null, -velocity);
     }
 
-    public function createExplosion (point:FlxPoint) {
+    function createExplosion (point:FlxPoint) {
         var exp = explosions.recycle(Explosion);
         exp.explode(point.x, point.y);
     }
