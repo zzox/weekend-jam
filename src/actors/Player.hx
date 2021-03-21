@@ -17,7 +17,7 @@ class Player extends FlxSprite {
 
     var shootTime:Float;
 
-    static inline final ACCELERATION = 800;
+    static inline final ACCELERATION = 1200;
 
     // TODO: MD: for each weapon
     static inline final BULLET_RELOAD_TIME = 0.2;
@@ -40,10 +40,8 @@ class Player extends FlxSprite {
             down: 0
         };
 
-        drag.set(1500, 1000);
+        drag.set(1800, 1200);
         maxVelocity.set(180, 120);
-            // later: differences between up/down and left/right
-        // collide with walls
 
         shootTime = 0;
     }
