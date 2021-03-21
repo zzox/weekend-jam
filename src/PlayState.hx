@@ -31,6 +31,7 @@ class PlayState extends FlxState {
 
     public var livingEnemies:Int;
     var subwavesDone:Bool;
+    var levelComplete:Bool;
 
     override public function create() {
         super.create();
@@ -81,6 +82,8 @@ class PlayState extends FlxState {
 
         livingEnemies = 0;
         subwavesDone = false;
+
+        levelComplete = false;
     }
 
     override public function update(elapsed:Float) {
@@ -95,19 +98,21 @@ class PlayState extends FlxState {
     function handleEnemySpawn (elapsed:Float) {
         gameTime += elapsed;
 
+        if (levelComplete) return;
+
         // if we haven't released all the subwaves, we check times here
         if (subwavesDone) {
             if (livingEnemies == 0) {
+                subwavesDone = false;
+                waveIndex++;
+                subwaveIndex = 0;
+                gameTime = 0;
+
                 if (waveIndex == Waves.data[worldName].length) {
+                    levelComplete = true;
                     trace('level complete!!!');
-                } else {
-                    subwavesDone = false;
-                    waveIndex++;
-                    subwaveIndex = 0;
-                    gameTime = 0;
                 }
             }
-            trace(livingEnemies);
         } else {
             var subwaveItem = Waves.data[worldName][waveIndex][subwaveIndex];
             if (gameTime > subwaveItem.time) {
