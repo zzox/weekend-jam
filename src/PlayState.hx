@@ -1,10 +1,14 @@
 package;
 
+import actors.Player;
+import actors.Enemy;
+import display.Explosion;
 import flixel.FlxState;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
+import objects.Projectile;
 
 class PlayState extends FlxState {
     static inline final ENEMY_POOL_SIZE = 10;
@@ -31,7 +35,7 @@ class PlayState extends FlxState {
 
         bgColor = 0xff151515;
 
-        player = new Player(120, 120, this);
+        player = new Player(77, 200, this);
         add(player);
 
         enemies = new FlxTypedGroup<Enemy>(ENEMY_POOL_SIZE);
@@ -74,20 +78,20 @@ class PlayState extends FlxState {
 
     function createEnemy () {
         var enemy = enemies.recycle(Enemy);
-        enemy.start(Math.random() * 120 + 20, -32, Direct, { yVel: 60 });
+        enemy.start(Math.random() * 120 + 20, -32, Direct, { yVel: 30 });
     }
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
-        enemy.kill();
         createExplosion(Utils.getSpriteCenter(enemy));
-        player.kill();
         createExplosion(Utils.getSpriteCenter(player));
+        enemy.kill();
+        player.kill();
     }
 
     function overlapProjectileWithEnemy (proj:Projectile, enemy:Enemy) {
-        proj.kill();
         createExplosion(Utils.getSpriteCenter(enemy));
         enemy.kill();
+        proj.kill();
     }
 
     public function shoot (x:Float, y:Float, velocity:Float) {

@@ -1,3 +1,5 @@
+package actors;
+
 import flixel.FlxSprite;
 import flixel.FlxG;
 
@@ -17,7 +19,7 @@ class Player extends FlxSprite {
     static inline final ACCELERATION = 800;
 
     // TODO: MD: for each weapon
-    static inline final BULLET_RELOAD_TIME = 0.01;
+    static inline final BULLET_RELOAD_TIME = 0.2;
     static inline final SHOOT_VELOCITY = 240;
 
     static inline final LEFT_BUMPER = 6;
@@ -113,7 +115,7 @@ class Player extends FlxSprite {
         acceleration.set(leftRightVel * ACCELERATION * 1.5, upDownVel * ACCELERATION);
 
         if (FlxG.keys.anyPressed([SPACE, Z]) && shootTime < 0) {
-            scene.shoot(x + (getHitbox().width / 2), y, SHOOT_VELOCITY);
+            scene.shoot(x + (getHitbox().width / 2) - 1, y, SHOOT_VELOCITY);
             shootTime = BULLET_RELOAD_TIME;
         }
     }

@@ -1,3 +1,5 @@
+package display;
+
 import flixel.FlxSprite;
 
 class Explosion extends FlxSprite {

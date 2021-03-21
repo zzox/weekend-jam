@@ -1,3 +1,5 @@
+package actors;
+
 import flixel.FlxSprite;
 
 enum EnemyPattern {
