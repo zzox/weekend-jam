@@ -1,10 +1,11 @@
 package;
 
+import actors.Player;
+import actors.Enemy;
 import data.Constants as Const;
 import data.Structures;
 import data.Waves;
-import actors.Player;
-import actors.Enemy;
+import display.Background;
 import display.Explosion;
 import flixel.FlxState;
 import flixel.FlxG;
@@ -19,6 +20,7 @@ class PlayState extends FlxState {
     static inline final EXPLOSION_POOL_SIZE = 20;
     static inline final PREROUND_TIME = 3;
 
+    var background:Background;
     var player:Player;
     var enemies:FlxTypedGroup<Enemy>;
     var projectiles:FlxTypedGroup<Projectile>;
@@ -47,6 +49,10 @@ class PlayState extends FlxState {
         FlxG.scaleMode = new PixelPerfectScaleMode();
 
         bgColor = 0xff151515;
+
+        background = new Background();
+        add(background);
+        background.scrollTween(10);
 
         player = new Player(77, 200, this);
         add(player);

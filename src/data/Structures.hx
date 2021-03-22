@@ -31,8 +31,6 @@ class Structures {
             items.push(Structures.formulateDistance(selection[0]));
         }
 
-        trace(items);
-
         return items;
     }
 
