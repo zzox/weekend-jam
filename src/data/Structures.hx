@@ -14,7 +14,7 @@ class Structures {
     static final structureMap = [
         OneMiddle => [.5],
         TwoMiddle => [.45, .55],
-        TwoWide => [.3, .7],
+        TwoWide => [.125, .875],
         ThreeMiddle => [.35, .5, .65],
         FiveWide => [0, .25, .5, .75, 1]
     ];

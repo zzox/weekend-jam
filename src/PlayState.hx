@@ -3,6 +3,7 @@ package;
 import actors.Player;
 import actors.Enemy;
 import data.Constants as Const;
+import data.Enemies;
 import data.Structures;
 import data.Waves;
 import display.Background;
@@ -138,10 +139,10 @@ class PlayState extends FlxState {
         }
     }
 
-    function createEnemy (x:Int, y:Int, type:String) {
+    function createEnemy (x:Int, y:Int, type:EnemyType) {
         livingEnemies++;
         var enemy = enemies.recycle(Enemy);
-        enemy.start(x, y, type, Direct, { yVel: 30 });
+        enemy.start(x, y, type);
     }
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
