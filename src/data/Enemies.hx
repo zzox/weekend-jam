@@ -28,15 +28,15 @@ class Enemies {
     public static final data:Map<EnemyType, EnemyInfo> = [
         SmallRedTwin => {
             name: "small-red-twin",
-            offset: new FlxPoint(8, 8),
-            size: new FlxPoint(8, 7),
+            offset: new FlxPoint(8, 9),
+            size: new FlxPoint(8, 4),
             pattern: Direct,
             yVel: 30
         },
         SmallGreenTwin => {
             name: "small-green-twin",
-            offset: new FlxPoint(8, 7),
-            size: new FlxPoint(8, 8),
+            offset: new FlxPoint(8, 9),
+            size: new FlxPoint(8, 4),
             pattern: Direct,
             yVel: 60
         },
