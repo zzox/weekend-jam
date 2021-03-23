@@ -22,7 +22,7 @@ class Enemy extends FlxSprite {
 
         loadGraphic(AssetPaths.small_ships__png, true, 24, 24);
 
-        animation.add('small-red-twin', [0, 1, 2], 12);
+        animation.add("small-red-twin", [0, 1, 2], 12);
 
         flipY = true;
     }

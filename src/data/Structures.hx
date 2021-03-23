@@ -5,23 +5,22 @@ import data.Constants as Const;
 enum EnemyStructure {
     OneMiddle;
     TwoMiddle;
+    TwoWide;
     ThreeMiddle;
     FiveWide;
 }
 
 class Structures {
-    static final oneMiddle = [.5];
-    static final twoMiddle = [.45, .55];
-    static final threeMiddle = [.35, .5, .65];
-    static final fiveWide = [0, .25, .5, .75, 1];
+    static final structureMap = [
+        OneMiddle => [.5],
+        TwoMiddle => [.45, .55],
+        TwoWide => [.3, .7],
+        ThreeMiddle => [.35, .5, .65],
+        FiveWide => [0, .25, .5, .75, 1]
+    ];
 
     public static function getStructure (structure:EnemyStructure, quantity:Int):Array<Int> {
-        var arrayStruct = switch (structure:EnemyStructure) {
-            case OneMiddle: oneMiddle;
-            case TwoMiddle: twoMiddle;
-            case ThreeMiddle: threeMiddle;
-            case FiveWide: fiveWide;
-        }
+        var arrayStruct = structureMap[structure];
         
         var a = arrayStruct.copy();
         var items = [];
