@@ -27,8 +27,8 @@ class Player extends FlxSprite {
         super(x, y);
         this.scene = scene;
 
-        loadGraphic(AssetPaths.player_ship__png, true, 16, 16);
-        offset.set(5, 5);
+        loadGraphic(AssetPaths.player_ship__png, true, 24, 24);
+        offset.set(9, 9);
         setSize(6, 6);
 
         animation.add('fly', [0]);

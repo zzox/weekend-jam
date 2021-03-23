@@ -122,11 +122,10 @@ class PlayState extends FlxState {
         } else {
             var subwaveItem = Waves.data[worldName][waveIndex][subwaveIndex];
             if (gameTime > subwaveItem.time) {
-
                 var enemyShape:Array<Int> = Structures.getStructure(subwaveItem.shape, subwaveItem.quantity);
 
                 for (xPos in enemyShape) {
-                    createEnemy(xPos, Const.ENEMY_START_Y);
+                    createEnemy(xPos, Const.ENEMY_START_Y, subwaveItem.type);
                 }
 
                 subwaveIndex++;
@@ -139,10 +138,10 @@ class PlayState extends FlxState {
         }
     }
 
-    function createEnemy (x:Int, y:Int) {
+    function createEnemy (x:Int, y:Int, type:String) {
         livingEnemies++;
         var enemy = enemies.recycle(Enemy);
-        enemy.start(x, y, Direct, { yVel: 30 });
+        enemy.start(x, y, type, Direct, { yVel: 30 });
     }
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {

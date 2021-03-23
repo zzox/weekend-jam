@@ -14,32 +14,34 @@ typedef PatternInfo = {
 class Enemy extends FlxSprite {
     var pattern:EnemyPattern;
     var scene:PlayState;
+    var type:String;
 
     public function new (scene:PlayState) {
         super(0, 0);
         this.scene = scene;
 
-        loadGraphic(AssetPaths.small_red_twin__png, true, 16, 16);
+        loadGraphic(AssetPaths.small_ships__png, true, 24, 24);
 
-        animation.add('idle', [0]);
+        animation.add('small-red-twin', [0, 1, 2], 12);
 
         flipY = true;
     }
 
-    public function start (x:Float, y:Float, pattern:EnemyPattern, info:PatternInfo) {
+    public function start (x:Float, y:Float, type:String, pattern:EnemyPattern, info:PatternInfo) {
         this.x = x;
         this.y = y;
 
-        offset.set(4, 4);
+        offset.set(8, 8);
         setSize(8, 7);
 
         this.pattern = pattern;
+        this.type = type;
 
         velocity.set(0, info.yVel);
     }
 
     override public function update (elapsed:Float) {
-        animation.play('idle');
+        animation.play(type);
 
         if (y > Const.BOTTOM_END) {
             kill();
