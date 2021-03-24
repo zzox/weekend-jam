@@ -20,17 +20,19 @@ class Waves {
                 { type: SmallRedTwin, quantity: 3, shape: ThreeMiddle, time: 12 }
             ], [
                 { type: SmallRedTwin, quantity: 2, shape: TwoMiddle, time: 0 },
-                { type: SmallRedTwin, quantity: 2, shape: FiveWide, time: 2 },
+                { type: SmallGreenTwin, quantity: 2, shape: TwoWide, time: 2 },
                 { type: SmallRedTwin, quantity: 3, shape: FiveWide, time: 4 },
                 { type: SmallRedTwin, quantity: 2, shape: TwoMiddle, time: 6 },
-                { type: SmallRedTwin, quantity: 2, shape: FiveWide, time: 8 },
+                { type: SmallGreenTwin, quantity: 2, shape: TwoWide, time: 8 },
                 { type: SmallRedTwin, quantity: 3, shape: FiveWide, time: 10 },
                 { type: SmallRedTwin, quantity: 5, shape: FiveWide, time: 12 }
             ], [
                 { type: SmallRedTwin, quantity: 3, shape: FiveWide, time: 0 },
                 { type: SmallGreenTwin, quantity: 2, shape: TwoWide, time: 2 },
                 { type: SmallRedTwin, quantity: 5, shape: FiveWide, time: 4 },
+                { type: SmallBlueSquid, quantity: 1, shape: OneMiddleWideLeft, time: 5 },
                 { type: SmallRedTwin, quantity: 3, shape: FiveWide, time: 6 },
+                { type: SmallBlueSquid, quantity: 1, shape: OneMiddleWideRight, time: 7 },
                 { type: SmallGreenTwin, quantity: 2, shape: TwoWide, time: 8 },
                 { type: SmallRedTwin, quantity: 5, shape: FiveWide, time: 10 },
                 { type: SmallRedTwin, quantity: 5, shape: FiveWide, time: 11 }

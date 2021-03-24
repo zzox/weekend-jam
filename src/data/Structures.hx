@@ -4,8 +4,11 @@ import data.Constants as Const;
 
 enum EnemyStructure {
     OneMiddle;
+    OneMiddleWideLeft;
+    OneMiddleWideRight;
     TwoMiddle;
     TwoWide;
+    TwoFarMiddle;
     ThreeMiddle;
     FiveWide;
 }
@@ -13,8 +16,11 @@ enum EnemyStructure {
 class Structures {
     static final structureMap = [
         OneMiddle => [.5],
+        OneMiddleWideLeft => [-.5],
+        OneMiddleWideRight => [1.5],
         TwoMiddle => [.45, .55],
         TwoWide => [.125, .875],
+        TwoFarMiddle => [-.5, 1.5],
         ThreeMiddle => [.35, .5, .65],
         FiveWide => [0, .25, .5, .75, 1]
     ];

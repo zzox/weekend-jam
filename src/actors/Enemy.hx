@@ -21,13 +21,14 @@ class Enemy extends FlxSprite {
 
         animation.add("small-red-twin", [0, 1, 2], 12);
         animation.add("small-green-twin", [3, 4, 5], 12);
-
-        flipY = true;
+        animation.add("small-blue-squid", [6, 7, 8], 12);
     }
 
     public function start (x:Float, y:Float, type:EnemyType) {
         this.x = x;
         this.y = y;
+
+        flipX = false;
 
         // DO LOOKUP
         var enemyType = Enemies.data[type];
@@ -36,7 +37,17 @@ class Enemy extends FlxSprite {
 
         name = enemyType.name;
 
-        velocity.set(0, enemyType.yVel);
+        if (enemyType.pattern == Direct) {
+            velocity.set(0, enemyType.yVel);
+        } else if (enemyType.pattern == DirectXY) {
+            var xDir = 1;
+            if (x > Const.MIDPOINT_X) {
+                flipX = true;
+                xDir = -1;
+            }
+
+            velocity.set(enemyType.xVel * xDir, enemyType.yVel);
+        }
     }
 
     override public function update (elapsed:Float) {

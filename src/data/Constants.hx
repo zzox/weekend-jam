@@ -8,4 +8,5 @@ class Constants {
 
     public static inline final ENEMY_START_Y = -32; // y position of queued enemies
     public static inline final BOTTOM_END = 256; // expire y poisition of enemies
+    public static inline final MIDPOINT_X = 80; // expire y poisition of enemies
 }

@@ -5,10 +5,12 @@ import flixel.math.FlxPoint;
 enum EnemyType {
     SmallRedTwin;
     SmallGreenTwin;
+    SmallBlueSquid;
 }
 
 enum EnemyPattern {
     Direct;
+    DirectXY;
 }
 
 typedef EnemyInfo = {
@@ -16,6 +18,7 @@ typedef EnemyInfo = {
     var offset:FlxPoint;
     var size:FlxPoint;
     var pattern:EnemyPattern;
+    var ?xVel:Int;
     var ?yVel:Int;
 }
 
@@ -40,6 +43,14 @@ class Enemies {
             pattern: Direct,
             yVel: 60
         },
+        SmallBlueSquid => {
+            name: "small-blue-squid",
+            offset: new FlxPoint(9, 10),
+            size: new FlxPoint(7, 6),
+            pattern: DirectXY,
+            xVel: 30,
+            yVel: 30,
+        }
     ];
 }
 
