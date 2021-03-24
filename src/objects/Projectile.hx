@@ -13,7 +13,7 @@ class Projectile extends FlxSprite {
         animation.add('small-bullet', [0, 1], 12);
     }
 
-    public function shoot (xPos:Float, yPos:Float, xVel:Float = 0.0, yVel:Float = 0.0) {
+    public function shoot (xPos:Float, yPos:Float, xVel:Float, yVel:Float) {
         setPosition(xPos, yPos);
         animation.play('small-bullet');
         velocity.set(xVel, yVel);

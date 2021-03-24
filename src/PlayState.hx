@@ -162,7 +162,7 @@ class PlayState extends FlxState {
 
     public function shoot (x:Float, y:Float, velocity:Float) {
         var proj = projectiles.recycle(Projectile);
-        proj.shoot(x, y, null, -velocity);
+        proj.shoot(x, y, 0, -velocity); // TODO: different shoot types
     }
 
     function createExplosion (point:FlxPoint) {
