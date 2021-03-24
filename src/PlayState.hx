@@ -57,6 +57,8 @@ class PlayState extends FlxState {
 
         player = new Player(77, 200, this);
         add(player);
+        add(player.horizontalFlames);
+        add(player.verticalFlames);
 
         enemies = new FlxTypedGroup<Enemy>(ENEMY_POOL_SIZE);
         for (_ in 0...ENEMY_POOL_SIZE) {
