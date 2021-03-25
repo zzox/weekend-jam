@@ -30,7 +30,6 @@ class Enemy extends FlxSprite {
 
         flipX = false;
 
-        // DO LOOKUP
         var enemyType = Enemies.data[type];
         offset.set(enemyType.offset.x, enemyType.offset.y);
         setSize(enemyType.size.x, enemyType.size.y);

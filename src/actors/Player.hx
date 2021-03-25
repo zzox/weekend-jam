@@ -17,6 +17,7 @@ class Player extends FlxSprite {
     var holds:HoldsObj;
 
     var shootTime:Float;
+    public var reloadTime:Float = 0.5;
 
     public var horizontalFlames:FlxSprite;
     public var verticalFlames:FlxSprite;
@@ -24,7 +25,6 @@ class Player extends FlxSprite {
     static inline final ACCELERATION = 1200;
 
     // TODO: MD: for each weapon
-    static inline final BULLET_RELOAD_TIME = 0.2;
     static inline final SHOOT_VELOCITY = 240;
 
     public function new (x:Float, y:Float, scene:PlayState) {
@@ -56,7 +56,10 @@ class Player extends FlxSprite {
         animation.play('fly');
 
         handleInputs(elapsed);
-        shootTime -= elapsed;
+        if (shootTime > 0) {
+            // only check above 0 so we can have intervals happen more accurately
+            shootTime -= elapsed;
+        }
 
         handleBumpers();
 
@@ -149,9 +152,9 @@ class Player extends FlxSprite {
 
         acceleration.set(leftRightVel * ACCELERATION * 1.5, upDownVel * ACCELERATION);
 
-        if (FlxG.keys.anyPressed([SPACE, Z]) && shootTime < 0) {
+        if (FlxG.keys.anyPressed([SPACE, Z]) && shootTime <= 0) {
             scene.shoot(x + (getHitbox().width / 2) - 1, y, SHOOT_VELOCITY);
-            shootTime = BULLET_RELOAD_TIME;
+            shootTime += reloadTime;
         }
     }
 
