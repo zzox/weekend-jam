@@ -1,9 +1,7 @@
 package;
 
-import js.Browser;
 import actors.Player;
 import actors.Enemy;
-import data.Constants as Const;
 import data.Enemies;
 import data.Structures;
 import data.Waves;
@@ -26,7 +24,7 @@ enum GameState {
 
 class PlayState extends FlxState {
     static inline final ENEMY_POOL_SIZE = 100;
-    static inline final PROJ_POOL_SIZE = 100;
+    static inline final PROJ_POOL_SIZE = 1000;
     static inline final EXPLOSION_POOL_SIZE = 20;
     static inline final PREROUND_TIME = 3;
 
@@ -83,7 +81,7 @@ class PlayState extends FlxState {
         add(enemies);
 
         projectiles = new FlxTypedGroup<Projectile>(PROJ_POOL_SIZE);
-        for (_ in 0...ENEMY_POOL_SIZE) {
+        for (_ in 0...PROJ_POOL_SIZE) {
             var proj = new Projectile();
             proj.kill();
             projectiles.add(proj);
@@ -135,6 +133,8 @@ class PlayState extends FlxState {
 
         background.scrollTween(10);
 
+        // TODO: tween player to middle and take control temporarily
+
         // TODO: transition sound
         FlxTween.tween(ambientSound, { volume: 0.0 }, 2.0);
 
@@ -153,11 +153,20 @@ class PlayState extends FlxState {
         var world = Waves.data[worldName];
         // if we haven't released all the subwaves, we check times here
         if (subwavesDone) {
+            // start the next wave if there's no enemies left.
+            // we have a negative gametime to start the next wave at the exact time the music loops.
             if (livingEnemies == 0) {
                 subwavesDone = false;
                 waveIndex++;
                 subwaveIndex = 0;
-                gameTime = -((waveSound.length / 1000) - loopTime);
+
+                var loopLength = waveSound.length / 1000;
+                gameTime = -(loopLength - loopTime);
+                // if it's too short (less than a beat) we add a new loop.
+                // WARN: Not 100% tested so a potential problem area.
+                if (gameTime > -(Waves.convertBeatsToSeconds(1, world.bpm))) {
+                    gameTime -= loopTime;
+                }
 
                 if (waveIndex == world.waves.length) {
                     levelComplete = true;
@@ -166,11 +175,11 @@ class PlayState extends FlxState {
             }
         } else {
             var subwaveItem = world.waves[waveIndex][subwaveIndex];
-            if (gameTime > Waves.convertBeatsToSeconds(subwaveItem.beats, world.bpm)) {
+            if (gameTime > Waves.convertBeatsToSeconds(subwaveItem.beats - 1, world.bpm)) {
                 var enemyShape:Array<Int> = Structures.getStructure(subwaveItem.shape, subwaveItem.quantity);
 
                 for (xPos in enemyShape) {
-                    createEnemy(xPos, Const.ENEMY_START_Y, subwaveItem.type);
+                    createEnemy(xPos, -(Waves.convertBeatsToSeconds(1, world.bpm) * 30), subwaveItem.type);
                 }
 
                 subwaveIndex++;
@@ -183,7 +192,7 @@ class PlayState extends FlxState {
         }
     }
 
-    function createEnemy (x:Int, y:Int, type:EnemyType) {
+    function createEnemy (x:Int, y:Float, type:EnemyType) {
         livingEnemies++;
         var enemy = enemies.recycle(Enemy);
         enemy.start(x, y, type);

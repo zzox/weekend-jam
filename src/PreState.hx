@@ -11,7 +11,8 @@ class PreState extends FlxState {
         super.create();
 
         FlxG.mouse.visible = false;
-        FlxG.autoPause = false;
+        // what about this?
+        // FlxG.autoPause = false;
 
         // var textBytes = Assets.getText(AssetPaths.miniset__fnt);
         // var XMLData = Xml.parse(textBytes);
