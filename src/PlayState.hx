@@ -199,10 +199,13 @@ class PlayState extends FlxState {
     }
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
+        // TODO: don't kill enemy here, only if they've lost hitpoints
         createExplosion(Utils.getSpriteCenter(enemy));
-        createExplosion(Utils.getSpriteCenter(player));
         enemy.kill();
-        player.kill();
+
+        if (!player.isHurt) {
+            player.damage(10, 'body');
+        }
     }
 
     function overlapProjectileWithEnemy (proj:Projectile, enemy:Enemy) {

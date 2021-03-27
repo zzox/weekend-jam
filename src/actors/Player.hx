@@ -1,6 +1,5 @@
 package actors;
 
-import lime.utils.AssetType;
 import data.Constants as Const;
 import flixel.FlxSprite;
 import flixel.FlxG;
@@ -21,6 +20,16 @@ class Player extends FlxSprite {
 
     public var horizontalFlames:FlxSprite;
     public var verticalFlames:FlxSprite;
+
+    public var hitPoints:Int;
+    public var shieldPoints:Int;
+    static inline final HURT_TIME = 1.0;
+    static inline final REALLY_HURT_TIME = 0.5;
+    static final HURT_FLASHES:Array<Int> = [0, 0, 1, 1, 1, 1];
+    static final REALLY_HURT_FLASHES:Array<Int> = [0, 1, 1, 0, 1, 1];
+    public var isHurt:Bool;
+    public var hurtTime:Float;
+    public var hurtFlashIndex:Int;
 
     static inline final ACCELERATION = 1200;
 
@@ -49,6 +58,12 @@ class Player extends FlxSprite {
 
         shootTime = 0;
 
+        shieldPoints = 10;
+        hitPoints = 100;
+        isHurt = false;
+        hurtFlashIndex = 0;
+        hurtTime = 0;
+
         createFlames();
     }
 
@@ -62,6 +77,32 @@ class Player extends FlxSprite {
         }
 
         handleBumpers();
+
+        if (isHurt) {
+            if (hurtTime > 0) {
+                hurtTime -= elapsed;
+
+                hurtFlashIndex = (hurtFlashIndex + 1) % HURT_FLASHES.length;
+
+                var al = HURT_FLASHES[hurtFlashIndex];
+                // if it's the beginning of a hurt cycle
+                if (hurtTime > HURT_TIME - REALLY_HURT_TIME) {
+                    al = REALLY_HURT_FLASHES[hurtFlashIndex];
+                }
+
+                alpha = al;
+                verticalFlames.alpha = al;
+                horizontalFlames.alpha = al;
+            } else {
+                isHurt = false;
+                hurtFlashIndex = 0;
+
+                // reset alphas
+                alpha = 1;
+                verticalFlames.alpha = 1;
+                horizontalFlames.alpha = 1;
+            }
+        }
 
         super.update(elapsed);
 
@@ -174,6 +215,21 @@ class Player extends FlxSprite {
         if (y > Const.BOTTOM_BUMPER) {
             y = Const.BOTTOM_BUMPER;
         }
+    }
+
+    public function damage (points:Int, type:String) {
+        hitPoints -= points;
+
+        if (hitPoints <= 0) {
+            die();
+        } else {
+            hurtTime = HURT_TIME;
+            isHurt = true;
+        }
+    }
+
+    function die () {
+        // call function in playstate
     }
 
     function createFlames () {
