@@ -7,6 +7,7 @@ import actors.Enemy;
 import data.Enemies;
 import data.Structures;
 import data.Waves;
+import data.Weapons;
 import display.Background;
 import display.Explosion;
 import flixel.FlxState;
@@ -40,7 +41,7 @@ class PlayState extends FlxState {
     var projectiles:FlxTypedGroup<Projectile>;
     var explosions:FlxTypedGroup<Explosion>;
 
-    var worldName:String;
+    var worldIndex:Int;
     var waveIndex:Int;
     var subwaveIndex:Int;
     var gameTime:Float;
@@ -107,6 +108,8 @@ class PlayState extends FlxState {
 
         gameState = MainMenu;
         ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
+
+        worldIndex = 0;
     }
 
     override public function update(elapsed:Float) {
@@ -127,7 +130,6 @@ class PlayState extends FlxState {
     }
 
     function startLevel () {
-        worldName = "space-1"; // MD: get from game data
         waveIndex = 0;
         subwaveIndex = 0;
         gameTime = -PREROUND_TIME;
@@ -136,7 +138,8 @@ class PlayState extends FlxState {
         subwavesDone = false;
         levelComplete = false;
 
-        player.reloadTime = Waves.convertBeatsToSeconds(1, Waves.data[worldName].bpm);
+        player.weapons[0].reloadTime = Waves.convertBeatsToSeconds(1, Waves.data[worldIndex].bpm);
+        trace(player.weapons[0].reloadTime);
 
         gameState = Playing;
 
@@ -163,7 +166,7 @@ class PlayState extends FlxState {
 
         if (levelComplete) return;
 
-        var world = Waves.data[worldName];
+        var world = Waves.data[worldIndex];
         // if we haven't released all the subwaves, we check times here
         if (subwavesDone) {
             // start the next wave if there's no enemies left.
@@ -227,9 +230,9 @@ class PlayState extends FlxState {
         proj.kill();
     }
 
-    public function shoot (x:Float, y:Float, velocity:Float) {
+    public function shoot (x:Float, y:Float, weapon:WeaponType) {
         var proj = projectiles.recycle(Projectile);
-        proj.shoot(x, y, 0, -velocity); // TODO: different proj types
+        proj.shoot(x, y, weapon);
     }
 
     function createExplosion (point:FlxPoint) {

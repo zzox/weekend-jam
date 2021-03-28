@@ -1,8 +1,10 @@
 package actors;
 
 import data.Constants as Const;
+import data.Weapons;
 import flixel.FlxSprite;
 import flixel.FlxG;
+import flixel.math.FlxPoint;
 
 typedef HoldsObj = {
     var left:Float;
@@ -11,12 +13,17 @@ typedef HoldsObj = {
     var down:Float;
 }
 
+typedef PlayerWeapon = {
+    var type:WeaponType;
+    var shootTime:Float;
+    var reloadTime:Float;
+}
+
 class Player extends FlxSprite {
     var scene:PlayState;
     var holds:HoldsObj;
 
-    var shootTime:Float;
-    public var reloadTime:Float = 0.5;
+    public var weapons:Array<PlayerWeapon>;
 
     public var horizontalFlames:FlxSprite;
     public var verticalFlames:FlxSprite;
@@ -36,7 +43,7 @@ class Player extends FlxSprite {
     static inline final ACCELERATION = 1200;
 
     // TODO: MD: for each weapon
-    static inline final SHOOT_VELOCITY = 240;
+    // static inline final SHOOT_VELOCITY = 240;
 
     public function new (x:Float, y:Float, scene:PlayState) {
         super(x, y);
@@ -58,8 +65,6 @@ class Player extends FlxSprite {
         drag.set(1800, 1200);
         maxVelocity.set(180, 120);
 
-        shootTime = 0;
-
         shieldPoints = 10;
         hitPoints = 100;
         isHurt = false;
@@ -69,15 +74,20 @@ class Player extends FlxSprite {
         inControl = true;
 
         createFlames();
+
+        weapons = [];
+        weapons.push({ type: PlayerBullet, shootTime: 0, reloadTime: 1 });
     }
 
     override public function update (elapsed:Float) {
         animation.play('fly');
 
         handleInputs(elapsed);
-        if (shootTime > 0) {
-            // only check above 0 so we can have intervals happen more accurately
-            shootTime -= elapsed;
+        for (weapon in weapons) {
+            if (weapon.shootTime > 0) {
+                // only check above 0 so we can have intervals happen more accurately
+                weapon.shootTime -= elapsed;
+            }
         }
 
         handleBumpers();
@@ -218,9 +228,16 @@ class Player extends FlxSprite {
 
         acceleration.set(leftRightVel * ACCELERATION * 1.5, upDownVel * ACCELERATION);
 
-        if (FlxG.keys.anyPressed([SPACE, Z]) && shootTime <= 0) {
-            scene.shoot(x + (getHitbox().width / 2) - 1, y, SHOOT_VELOCITY);
-            shootTime += reloadTime;
+        // looop through weapons
+        if (FlxG.keys.anyPressed([SPACE, Z])) {
+            for (weapon in weapons) {
+                if (weapon.shootTime <= 0) {
+
+                    // weaponType
+                    scene.shoot(x + (getHitbox().width / 2) - 1, y, weapon.type);
+                    weapon.shootTime += weapon.reloadTime;
+                }
+            }
         }
     }
 
