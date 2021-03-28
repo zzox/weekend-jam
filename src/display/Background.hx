@@ -49,7 +49,7 @@ class Background extends FlxGroup {
                 2,
                 {
                     type: FlxTweenType.PINGPONG,
-                    ease: FlxEase.cubeOut, 
+                    ease: FlxEase.cubeInOut,
                     onComplete: (t:FlxTween) -> t.executions == 2 ? t.cancel() : null
                 }
             );

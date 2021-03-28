@@ -36,6 +36,7 @@ class Waves {
                 { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 8 },
                 { type: SmallBlueSquid, quantity: 1, shape: OneMiddleWideLeft, beats: 10 },
                 { type: SmallRedTwin, quantity: 3, shape: FiveWide, beats: 12 },
+                // TODO: have squids from random directions in both of these
                 { type: SmallBlueSquid, quantity: 1, shape: OneMiddleWideRight, beats: 14 },
                 { type: SmallGreenTwin, quantity: 2, shape: TwoWide, beats: 16 },
                 { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 20 },

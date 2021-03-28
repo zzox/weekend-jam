@@ -30,6 +30,8 @@ class Player extends FlxSprite {
     public var isHurt:Bool;
     public var hurtTime:Float;
     public var hurtFlashIndex:Int;
+    public var inControl:Bool;
+    var lastX:Null<Float>;
 
     static inline final ACCELERATION = 1200;
 
@@ -63,6 +65,8 @@ class Player extends FlxSprite {
         isHurt = false;
         hurtFlashIndex = 0;
         hurtTime = 0;
+
+        inControl = true;
 
         createFlames();
     }
@@ -114,6 +118,27 @@ class Player extends FlxSprite {
     function handleInputs (elapsed:Float) {
         var upDownVel:Float = 0.0;
         var leftRightVel:Float = 0.0;
+
+        if (inControl) {
+            lastX = null; // only used for flame directions when not in control
+        } else {
+            if (Math.abs(x - PlayState.PLAYER_START_X) > 1) {
+                horizontalFlames.visible = true;
+                if (lastX < x) {
+                    horizontalFlames.animation.play('left-small-flames');
+                } else {
+                    horizontalFlames.animation.play('right-small-flames');
+                }
+            } else {
+                horizontalFlames.visible = false;
+            }
+
+            lastX = x;
+
+            verticalFlames.visible = true;
+            verticalFlames.animation.play('down-large-flames');
+            return;
+        }
 
         if (FlxG.keys.pressed.LEFT) {
             leftRightVel = -1;
@@ -237,7 +262,7 @@ class Player extends FlxSprite {
         verticalFlames.loadGraphic(AssetPaths.player_vertical_flames__png, true, 24, 24);
         verticalFlames.animation.add('down-small-flames', [0, 1, 2], 12);
         verticalFlames.animation.add('down-flames', [3, 4, 5], 12);
-        verticalFlames.animation.add('down-big-flames', [6, 7, 8], 12);
+        verticalFlames.animation.add('down-large-flames', [6, 7, 8], 12);
         verticalFlames.animation.add('up-small-flames', [9, 10, 11], 12);
         verticalFlames.animation.add('up-flames', [12, 13, 14], 12);
         verticalFlames.visible = false;

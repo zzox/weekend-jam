@@ -1,5 +1,6 @@
 package;
 
+import flixel.tweens.FlxEase;
 import actors.Player;
 import actors.Enemy;
 import data.Enemies;
@@ -27,6 +28,8 @@ class PlayState extends FlxState {
     static inline final PROJ_POOL_SIZE = 1000;
     static inline final EXPLOSION_POOL_SIZE = 20;
     static inline final PREROUND_TIME = 3;
+    public static inline final PLAYER_START_X = 77;
+    static inline final PLAYER_START_Y = 200;
 
     public var gameState:GameState;
 
@@ -67,7 +70,7 @@ class PlayState extends FlxState {
         background = new Background();
         add(background);
 
-        player = new Player(77, 200, this);
+        player = new Player(PLAYER_START_X, PLAYER_START_Y, this);
         add(player);
         add(player.horizontalFlames);
         add(player.verticalFlames);
@@ -131,12 +134,16 @@ class PlayState extends FlxState {
 
         gameState = Playing;
 
-        background.scrollTween(10);
-
-        // TODO: tween player to middle and take control temporarily
+        background.scrollTween(20);
 
         // TODO: transition sound
-        FlxTween.tween(ambientSound, { volume: 0.0 }, 2.0);
+        FlxTween.tween(ambientSound, { volume: 0.0 }, 3.0);
+
+        player.inControl = false;
+        FlxTween.tween(player, { x: PLAYER_START_X }, 3.0, { ease: FlxEase.cubeInOut });
+        FlxTween.tween(player, { y: PLAYER_START_Y }, 3.0, { ease: FlxEase.cubeInOut, onComplete:
+            (_:FlxTween) -> { player.inControl = true; }
+        });
 
         var timer = new FlxTimer();
         timer.start(PREROUND_TIME, (_:FlxTimer) -> {
