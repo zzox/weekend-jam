@@ -146,7 +146,7 @@ class PlayState extends FlxState {
         FlxTween.tween(ambientSound, { volume: 0.0 }, 3.0);
 
         player.inControl = false;
-        FlxTween.tween(player, { x: PLAYER_START_X }, 3.0, { ease: FlxEase.cubeInOut });
+        FlxTween.tween(player, { x: PLAYER_START_X }, 3.0, { ease: FlxEase.cubeOut });
         FlxTween.tween(player, { y: PLAYER_START_Y }, 3.0, { ease: FlxEase.cubeInOut, onComplete:
             (_:FlxTween) -> { player.inControl = true; }
         });

@@ -13,17 +13,6 @@ class PreState extends FlxState {
         FlxG.mouse.visible = false;
         // what about this?
         // FlxG.autoPause = false;
-
-        // var textBytes = Assets.getText(AssetPaths.miniset__fnt);
-        // var XMLData = Xml.parse(textBytes);
-        // var fontAngelCode = FlxBitmapFont.fromAngelCode(AssetPaths.miniset__png, XMLData);
-
-        // var text = new FlxBitmapText(fontAngelCode);
-        // text.letterSpacing = -1;
-        // text.setPosition(12, 12);
-        // text.text = 'We are WAITING to start_the_GAMe??!!!!';
-        // bgColor = 0xffaaaaaa;
-        // add(text);
     }
     
     override public function update (elapsed:Float) {
