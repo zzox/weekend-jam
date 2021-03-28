@@ -77,6 +77,7 @@ class Player extends FlxSprite {
 
         weapons = [];
         weapons.push({ type: PlayerBullet, shootTime: 0, reloadTime: 1 });
+        weapons.push({ type: PlayerBall, shootTime: 0, reloadTime: 1 });
     }
 
     override public function update (elapsed:Float) {

@@ -138,8 +138,9 @@ class PlayState extends FlxState {
         subwavesDone = false;
         levelComplete = false;
 
+        // move to function to change according to powerups AND bpm
         player.weapons[0].reloadTime = Waves.convertBeatsToSeconds(1, Waves.data[worldIndex].bpm);
-        trace(player.weapons[0].reloadTime);
+        player.weapons[1].reloadTime = Waves.convertBeatsToSeconds(2, Waves.data[worldIndex].bpm);
 
         gameState = Playing;
 
@@ -231,8 +232,15 @@ class PlayState extends FlxState {
     }
 
     public function shoot (x:Float, y:Float, weapon:WeaponType) {
+        var bullet = Weapons.data[weapon];
+
         var proj = projectiles.recycle(Projectile);
-        proj.shoot(x, y, weapon);
+        proj.shoot(x, y, bullet);
+
+        if (bullet.style == PlayerTwoShots) {
+            var proj = projectiles.recycle(Projectile);
+            proj.shoot(x, y, bullet, { flipXVel: true });        
+        }
     }
 
     function createExplosion (point:FlxPoint) {

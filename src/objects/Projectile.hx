@@ -3,6 +3,10 @@ package objects;
 import data.Weapons;
 import flixel.FlxSprite;
 
+typedef ProjOptions = {
+    var ?flipXVel:Bool;
+}
+
 class Projectile extends FlxSprite {
     public function new () {
         super(0, 0);
@@ -13,13 +17,16 @@ class Projectile extends FlxSprite {
         animation.add('small-player-ball', [2, 3], 12);
     }
 
-    public function shoot (xPos:Float, yPos:Float, weapon:WeaponType) {
-        var bullet = Weapons.data[weapon];
+    public function shoot (xPos:Float, yPos:Float, weapon:Weapon, ?options:ProjOptions) {
+        var leftFlip = 1;
+        if (options != null && options.flipXVel) {
+            leftFlip = -1;
+        }
 
-        setSize(bullet.size.x, bullet.size.y);
-        offset.set(bullet.size.x, bullet.size.y);
         setPosition(xPos, yPos);
-        animation.play(bullet.animName);
-        velocity.set(bullet.velocity.x, bullet.velocity.y);
+        setSize(weapon.size.x, weapon.size.y);
+        offset.set(weapon.offset.x, weapon.offset.y);
+        animation.play(weapon.animName);
+        velocity.set(weapon.velocity.x * leftFlip, weapon.velocity.y);
     }
 }
