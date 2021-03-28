@@ -1,5 +1,6 @@
 package;
 
+import display.HUD;
 import flixel.tweens.FlxEase;
 import actors.Player;
 import actors.Enemy;
@@ -34,7 +35,7 @@ class PlayState extends FlxState {
     public var gameState:GameState;
 
     var background:Background;
-    var player:Player;
+    public var player:Player;
     var enemies:FlxTypedGroup<Enemy>;
     var projectiles:FlxTypedGroup<Projectile>;
     var explosions:FlxTypedGroup<Explosion>;
@@ -51,6 +52,8 @@ class PlayState extends FlxState {
     var ambientSound:FlxSound;
     var waveSound:FlxSound;
     var loopTime:Float = 0.0;
+
+    var hud:HUD;
 
     override public function create() {
         super.create();
@@ -98,6 +101,9 @@ class PlayState extends FlxState {
             explosions.add(explo);
         }
         add(explosions);
+
+        hud = new HUD(this);
+        add(hud);
 
         gameState = MainMenu;
         ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
