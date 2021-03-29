@@ -13,6 +13,7 @@ class HUD extends FlxGroup {
     static inline final LOW_HEALTH_AMOUNT = 21;
     static inline final BAR_START = 27;
     static inline final BAR_COUNT = 50;
+    static inline final DIGITS_LENGTH = 8;
 
     var background:FlxSprite;
     var shieldContent:Array<FlxSprite>;
@@ -22,6 +23,7 @@ class HUD extends FlxGroup {
 
     var scene:PlayState;
 
+    var worldText:FlxBitmapText;
     var pointsText:FlxBitmapText;
 
     public function new (scene:PlayState) {
@@ -71,9 +73,21 @@ class HUD extends FlxGroup {
         var XMLData = Xml.parse(textBytes);
         var fontAngelCode = FlxBitmapFont.fromAngelCode(AssetPaths.pixel3x5__png, XMLData);
 
+        var worldLabel = new FlxSprite(131, 1, AssetPaths.world_label__png);
+        worldLabel.color = 0xcf3c71;
+        add(worldLabel);
+
+        worldText = new FlxBitmapText(fontAngelCode);
+        worldText.setPosition(155, -4);
+        worldText.color = 0xcf3c71;
+        add(worldText);
+
+        var pointsLabel = new FlxSprite(105, 8, AssetPaths.score_label__png);
+        add(pointsLabel);
+
         pointsText = new FlxBitmapText(fontAngelCode);
-        pointsText.setPosition(100, 2);
-        pointsText.text = '00000100';
+        pointsText.setPosition(127, 3);
+        pointsText.text = '00000000';
         add(pointsText);
     }
 
@@ -91,6 +105,9 @@ class HUD extends FlxGroup {
         }
         healthLabel.color = color;
         healthOutline.color = color;
+
+        worldText.text = scene.worldIndex + 1 + '';
+        pointsText.text = Utils.leftPad(scene.points, DIGITS_LENGTH);
 
         super.update(elapsed);
     }

@@ -41,10 +41,11 @@ class PlayState extends FlxState {
     var projectiles:FlxTypedGroup<Projectile>;
     var explosions:FlxTypedGroup<Explosion>;
 
-    var worldIndex:Int;
+    public var worldIndex:Int;
     var waveIndex:Int;
     var subwaveIndex:Int;
     var gameTime:Float;
+    public var points:Int;
 
     public var livingEnemies:Int;
     var subwavesDone:Bool;
@@ -110,6 +111,7 @@ class PlayState extends FlxState {
         ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
 
         worldIndex = 0;
+        points = 0;
     }
 
     override public function update(elapsed:Float) {
@@ -122,6 +124,8 @@ class PlayState extends FlxState {
             loopTime += elapsed;
 
             handleEnemySpawn(elapsed);
+
+            handlePoints();
         } else if (gameState == MainMenu) {
             if (FlxG.keys.anyJustPressed([SPACE, TAB, Z, X])) {
                 startLevel();
@@ -206,6 +210,12 @@ class PlayState extends FlxState {
                     subwavesDone = true;
                 }
             }
+        }
+    }
+
+    function handlePoints () {
+        if (points < 0) {
+            points = 0;
         }
     }
 
