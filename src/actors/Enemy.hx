@@ -12,6 +12,7 @@ class Enemy extends FlxSprite {
     var pattern:EnemyPattern;
     var scene:PlayState;
     var name:String;
+    public var points:Int;
 
     public function new (scene:PlayState) {
         super(0, 0);
@@ -35,6 +36,7 @@ class Enemy extends FlxSprite {
         setSize(enemyType.size.x, enemyType.size.y);
 
         name = enemyType.name;
+        points = enemyType.points;
 
         if (enemyType.pattern == Direct) {
             velocity.set(0, enemyType.yVel);
@@ -53,6 +55,7 @@ class Enemy extends FlxSprite {
         animation.play(name);
 
         if (y > Const.BOTTOM_END) {
+            scene.points -= points;
             kill();
         }
 

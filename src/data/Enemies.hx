@@ -15,6 +15,7 @@ enum EnemyPattern {
 
 typedef EnemyInfo = {
     var name:String;
+    var points:Int;
     var offset:FlxPoint;
     var size:FlxPoint;
     var pattern:EnemyPattern;
@@ -31,6 +32,7 @@ class Enemies {
     public static final data:Map<EnemyType, EnemyInfo> = [
         SmallRedTwin => {
             name: "small-red-twin",
+            points: 100,
             offset: new FlxPoint(8, 9),
             size: new FlxPoint(8, 4),
             pattern: Direct,
@@ -38,6 +40,7 @@ class Enemies {
         },
         SmallGreenTwin => {
             name: "small-green-twin",
+            points: 200,
             offset: new FlxPoint(8, 9),
             size: new FlxPoint(8, 4),
             pattern: Direct,
@@ -45,6 +48,7 @@ class Enemies {
         },
         SmallBlueSquid => {
             name: "small-blue-squid",
+            points: 500,
             offset: new FlxPoint(9, 10),
             size: new FlxPoint(7, 6),
             pattern: DirectXY,

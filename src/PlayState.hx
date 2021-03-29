@@ -227,6 +227,7 @@ class PlayState extends FlxState {
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
         // TODO: don't kill enemy here, only if they've lost hitpoints
+        // do we subtract or add points here?
         createExplosion(Utils.getSpriteCenter(enemy));
         enemy.kill();
 
@@ -237,6 +238,8 @@ class PlayState extends FlxState {
 
     function overlapProjectileWithEnemy (proj:Projectile, enemy:Enemy) {
         createExplosion(Utils.getSpriteCenter(enemy));
+        points += enemy.points;
+        // TODO: potentially spawn powerup
         enemy.kill();
         proj.kill();
     }
