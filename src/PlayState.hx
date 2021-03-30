@@ -23,6 +23,7 @@ import objects.Projectile;
 enum GameState {
     Playing;
     MainMenu;
+    Store;
 }
 
 class PlayState extends FlxState {
@@ -105,6 +106,7 @@ class PlayState extends FlxState {
         add(explosions);
 
         hud = new HUD(this);
+        hud.visible = false;
         add(hud);
 
         gameState = MainMenu;
@@ -140,7 +142,6 @@ class PlayState extends FlxState {
 
         livingEnemies = 0;
         subwavesDone = false;
-        levelComplete = false;
 
         // move to function to change according to powerups AND bpm
         player.weapons[0].reloadTime = Waves.convertBeatsToSeconds(1, Waves.data[worldIndex].bpm);
@@ -148,28 +149,25 @@ class PlayState extends FlxState {
 
         gameState = Playing;
 
-        background.scrollTween(20);
-
-        // TODO: transition sound
-        FlxTween.tween(ambientSound, { volume: 0.0 }, 3.0);
-
-        player.inControl = false;
-        FlxTween.tween(player, { x: PLAYER_START_X }, 3.0, { ease: FlxEase.cubeOut });
-        FlxTween.tween(player, { y: PLAYER_START_Y }, 3.0, { ease: FlxEase.cubeInOut, onComplete:
-            (_:FlxTween) -> { player.inControl = true; }
-        });
+        tweenPlayerToCenter();
 
         var timer = new FlxTimer();
         timer.start(PREROUND_TIME, (_:FlxTimer) -> {
             waveSound = FlxG.sound.play(AssetPaths.int1__wav, 1, true);
             waveSound.onComplete = () -> loopTime = 0;
         });
+        hud.visible = true;
+    }
+
+    function winLevel () {
+        hud.winBg.visible = true;
+        hud.winText.visible = true;
+
+        tweenPlayerToCenter();
     }
 
     function handleEnemySpawn (elapsed:Float) {
         gameTime += elapsed;
-
-        if (levelComplete) return;
 
         var world = Waves.data[worldIndex];
         // if we haven't released all the subwaves, we check times here
@@ -190,8 +188,8 @@ class PlayState extends FlxState {
                 }
 
                 if (waveIndex == world.waves.length) {
-                    levelComplete = true;
-                    trace('level complete!!!');
+                    gameState = Store;
+                    winLevel();
                 }
             }
         } else {
@@ -259,5 +257,22 @@ class PlayState extends FlxState {
     function createExplosion (point:FlxPoint) {
         var exp = explosions.recycle(Explosion);
         exp.explode(point.x, point.y);
+    }
+
+    function tweenPlayerToCenter () {
+        background.scrollTween(20);
+
+        // TODO: transition sound
+        FlxTween.tween(ambientSound, { volume: 0.0 }, 3.0);
+
+        player.inControl = false;
+        FlxTween.tween(player, { x: PLAYER_START_X }, 3.0, { ease: FlxEase.cubeOut });
+        FlxTween.tween(player, { y: PLAYER_START_Y }, 3.0, { ease: FlxEase.cubeInOut, onComplete:
+            (_:FlxTween) -> {
+                hud.winBg.visible = false;
+                hud.winText.visible = false;
+                player.inControl = true;
+            }
+        });
     }
 }

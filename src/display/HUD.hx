@@ -26,6 +26,9 @@ class HUD extends FlxGroup {
     var worldText:FlxBitmapText;
     var pointsText:FlxBitmapText;
 
+    public var winText:FlxBitmapText;
+    public var winBg:FlxSprite;
+
     public function new (scene:PlayState) {
         super();
 
@@ -87,8 +90,18 @@ class HUD extends FlxGroup {
 
         pointsText = new FlxBitmapText(fontAngelCode);
         pointsText.setPosition(127, 3);
-        pointsText.text = '00000000';
         add(pointsText);
+
+        winBg = new FlxSprite(0, 112);
+        winBg.makeGraphic(160, 13, 0xff211640);
+        winBg.visible = false;
+        add(winBg);
+
+        winText = new FlxBitmapText(fontAngelCode);
+        winText.setPosition(18, 110);
+        winText.text = 'L E V E L  C O M P L E T E';
+        winText.visible = false;
+        add(winText);
     }
 
     override function update (elapsed:Float) {

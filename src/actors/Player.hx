@@ -42,9 +42,6 @@ class Player extends FlxSprite {
 
     static inline final ACCELERATION = 1200;
 
-    // TODO: MD: for each weapon
-    // static inline final SHOOT_VELOCITY = 240;
-
     public function new (x:Float, y:Float, scene:PlayState) {
         super(x, y);
         this.scene = scene;

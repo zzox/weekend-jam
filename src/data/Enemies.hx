@@ -40,7 +40,7 @@ class Enemies {
         },
         SmallGreenTwin => {
             name: "small-green-twin",
-            points: 200,
+            points: 250,
             offset: new FlxPoint(8, 9),
             size: new FlxPoint(8, 4),
             pattern: Direct,
