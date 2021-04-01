@@ -270,6 +270,11 @@ class Player extends FlxSprite {
 
     function die () {
         // call function in playstate
+        scene.gameOver();
+        scene.createExplosion(Utils.getSpriteCenter(this));
+        verticalFlames.kill();
+        horizontalFlames.kill();
+        this.kill();
     }
 
     function createFlames () {

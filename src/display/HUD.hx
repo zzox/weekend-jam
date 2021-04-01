@@ -105,22 +105,31 @@ class HUD extends FlxGroup {
     }
 
     override function update (elapsed:Float) {
-        var shield = scene.player.shieldPoints;
-        for (i in 0...shieldContent.length) {
-            shieldContent[i].visible = i <= shield / 2;
-        }
+        if (scene.player != null) {
+            var shield = scene.player.shieldPoints;
+            for (i in 0...shieldContent.length) {
+                shieldContent[i].visible = i <= shield / 2;
+            }
 
-        var health = scene.player.hitPoints;
-        var color = health < LOW_HEALTH_AMOUNT ? LOW_HEALTH_COLOR : HEALTH_START_COLOR;
-        for (i in 0...healthContent.length) {
-            healthContent[i].visible = i < health / 2;
-            healthContent[i].color = color;
-        }
-        healthLabel.color = color;
-        healthOutline.color = color;
+            var health = scene.player.hitPoints;
+            var color = health < LOW_HEALTH_AMOUNT ? LOW_HEALTH_COLOR : HEALTH_START_COLOR;
+            for (i in 0...healthContent.length) {
+                healthContent[i].visible = i < health / 2;
+                healthContent[i].color = color;
+            }
+            healthLabel.color = color;
+            healthOutline.color = color;
 
-        worldText.text = scene.worldIndex + 1 + '';
-        pointsText.text = Utils.leftPad(scene.points, DIGITS_LENGTH);
+            worldText.text = scene.worldIndex + 1 + '';
+            pointsText.text = Utils.leftPad(scene.points, DIGITS_LENGTH);
+        } else {
+            var health = 0;
+            var color = LOW_HEALTH_COLOR;
+            for (i in 0...healthContent.length) {
+                healthContent[i].visible = i < health / 2;
+                healthContent[i].color = color;
+            }
+        }
 
         super.update(elapsed);
     }

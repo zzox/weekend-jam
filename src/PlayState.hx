@@ -12,32 +12,39 @@ import display.Background;
 import display.Explosion;
 import flixel.FlxState;
 import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.graphics.frames.FlxBitmapFont;
+import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
+import flixel.text.FlxBitmapText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import objects.Projectile;
+import openfl.utils.Assets;
 
 enum GameState {
     Playing;
     MainMenu;
     Store;
+    GameOver;
 }
 
 class PlayState extends FlxState {
     static inline final ENEMY_POOL_SIZE = 100;
     static inline final PROJ_POOL_SIZE = 1000;
     static inline final EXPLOSION_POOL_SIZE = 20;
-    static inline final PREROUND_TIME = 3;
     public static inline final PLAYER_START_X = 77;
     static inline final PLAYER_START_Y = 200;
+    static inline final PLAYER_RESPAWN_Y = 300;
+    static inline final TRANSITION_TIME = 3.0;
 
     public var gameState:GameState;
 
     var background:Background;
-    public var player:Player;
+    public var player:Null<Player>;
     var enemies:FlxTypedGroup<Enemy>;
     var projectiles:FlxTypedGroup<Projectile>;
     var explosions:FlxTypedGroup<Explosion>;
@@ -57,6 +64,7 @@ class PlayState extends FlxState {
     var loopTime:Float = 0.0;
 
     var hud:HUD;
+    var gameOverBanner:FlxGroup;
 
     override public function create() {
         super.create();
@@ -109,6 +117,23 @@ class PlayState extends FlxState {
         hud.visible = false;
         add(hud);
 
+        var textBytes = Assets.getText(AssetPaths.pixel3x5__fnt);
+        var XMLData = Xml.parse(textBytes);
+        var fontAngelCode = FlxBitmapFont.fromAngelCode(AssetPaths.pixel3x5__png, XMLData);
+
+        gameOverBanner = new FlxGroup();
+        var goBg = new FlxSprite(0, 112);
+        goBg.makeGraphic(160, 13, 0xff211640);
+        gameOverBanner.add(goBg);
+
+        var goText = new FlxBitmapText(fontAngelCode);
+        goText.setPosition(40, 110);
+        goText.text = 'G A M E  O V E R';
+        gameOverBanner.add(goText);
+
+        gameOverBanner.visible = false;
+        add(gameOverBanner);
+
         gameState = MainMenu;
         ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
 
@@ -118,6 +143,11 @@ class PlayState extends FlxState {
 
     override public function update(elapsed:Float) {
         super.update(elapsed);
+
+        var anyKey:Bool = false;
+        if (FlxG.keys.anyJustPressed([SPACE, TAB, Z, X])) {
+            anyKey = true;
+        }
 
         if (gameState == Playing) {
             FlxG.overlap(enemies, player, overlapPlayerWithEnemy);
@@ -129,8 +159,12 @@ class PlayState extends FlxState {
 
             handlePoints();
         } else if (gameState == MainMenu) {
-            if (FlxG.keys.anyJustPressed([SPACE, TAB, Z, X])) {
+            if (anyKey) {
                 startLevel();
+            }
+        } else if (gameState == GameOver) {
+            if (anyKey) {
+                FlxG.switchState(new PlayState());
             }
         }
     }
@@ -138,7 +172,7 @@ class PlayState extends FlxState {
     function startLevel () {
         waveIndex = 0;
         subwaveIndex = 0;
-        gameTime = -PREROUND_TIME;
+        gameTime = -TRANSITION_TIME;
 
         livingEnemies = 0;
         subwavesDone = false;
@@ -151,8 +185,8 @@ class PlayState extends FlxState {
 
         tweenPlayerToCenter();
 
-        var timer = new FlxTimer();
-        timer.start(PREROUND_TIME, (_:FlxTimer) -> {
+        new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
+            // TODO: play song from the level
             waveSound = FlxG.sound.play(AssetPaths.int1__wav, 1, true);
             waveSound.onComplete = () -> loopTime = 0;
         });
@@ -164,6 +198,30 @@ class PlayState extends FlxState {
         hud.winText.visible = true;
 
         tweenPlayerToCenter();
+    }
+
+    // TODO: show score in banner
+    public function gameOver () {
+        player = null;
+        FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME);
+        gameOverBanner.visible = true;
+
+        new FlxTimer().start(1.5, (_:FlxTimer) -> {
+            // show score
+            // TODO: check high score?
+            hud.visible = false;
+        });
+
+        new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
+            gameState = GameOver;
+            // TODO: game over music? or silence?
+            ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
+        });
+    }
+
+    function generateStore () {
+        // first, we generate the items
+        // we show what bgs we have, if we have them
     }
 
     function handleEnemySpawn (elapsed:Float) {
@@ -254,7 +312,7 @@ class PlayState extends FlxState {
         }
     }
 
-    function createExplosion (point:FlxPoint) {
+    public function createExplosion (point:FlxPoint) {
         var exp = explosions.recycle(Explosion);
         exp.explode(point.x, point.y);
     }
@@ -263,16 +321,21 @@ class PlayState extends FlxState {
         background.scrollTween(20);
 
         // TODO: transition sound
-        FlxTween.tween(ambientSound, { volume: 0.0 }, 3.0);
+        FlxTween.tween(ambientSound, { volume: 0.0 }, TRANSITION_TIME);
 
         player.inControl = false;
-        FlxTween.tween(player, { x: PLAYER_START_X }, 3.0, { ease: FlxEase.cubeOut });
-        FlxTween.tween(player, { y: PLAYER_START_Y }, 3.0, { ease: FlxEase.cubeInOut, onComplete:
+        FlxTween.tween(player, { x: PLAYER_START_X }, TRANSITION_TIME, { ease: FlxEase.cubeOut });
+        FlxTween.tween(player, { y: PLAYER_START_Y }, TRANSITION_TIME, { ease: FlxEase.cubeInOut, onComplete:
             (_:FlxTween) -> {
                 hud.winBg.visible = false;
                 hud.winText.visible = false;
                 player.inControl = true;
             }
         });
+    }
+
+    function overlapPowerup () {
+        // if we have points, we buy it.
+        // if we don't, nothing happens
     }
 }
