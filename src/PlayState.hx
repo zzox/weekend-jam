@@ -10,6 +10,7 @@ import data.Waves;
 import data.Weapons;
 import display.Background;
 import display.Explosion;
+import display.Store;
 import flixel.FlxState;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -66,6 +67,8 @@ class PlayState extends FlxState {
     var hud:HUD;
     var gameOverBanner:FlxGroup;
 
+    var store:Store;
+
     override public function create() {
         super.create();
 
@@ -83,6 +86,10 @@ class PlayState extends FlxState {
 
         background = new Background();
         add(background);
+
+        store = new Store(this);
+        store.visible = false;
+        add(store);
 
         player = new Player(PLAYER_START_X, PLAYER_START_Y, this);
         add(player);
@@ -117,6 +124,7 @@ class PlayState extends FlxState {
         hud.visible = false;
         add(hud);
 
+        // GAME OVER BANNER
         var textBytes = Assets.getText(AssetPaths.pixel3x5__fnt);
         var XMLData = Xml.parse(textBytes);
         var fontAngelCode = FlxBitmapFont.fromAngelCode(AssetPaths.pixel3x5__png, XMLData);

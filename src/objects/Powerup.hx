@@ -4,6 +4,7 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 
 enum PowerupTypes {
+    Double;
     ForwardTrips;
     MidTrips;
     SideTrips;
@@ -15,6 +16,18 @@ enum PowerupTypes {
 
 class Powerup extends FlxSprite {
     public var type:PowerupTypes;
+
+    static inline powerupCosts:Map<PowerupTypes, Int> = {
+        Clear => 5000,
+        Shield => 10000,
+        Repair => 20000,
+        ForwardTrips => 50000,
+        MidTrips => 50000,
+        Backshoot => 75000,
+        SideTrips => 100000,
+        Double => 1000000
+    }
+
     public function new (x:Int, y:Int, type:PowerupTypes) {
         super(x, y);
         this.type = type;

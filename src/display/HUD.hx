@@ -1,5 +1,6 @@
 package display;
 
+import data.Constants as Const;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.group.FlxGroup;
@@ -35,7 +36,7 @@ class HUD extends FlxGroup {
         this.scene = scene;
 
         background = new FlxSprite(0, 0);
-        background.makeGraphic(160, 15, 0xff211640);
+        background.makeGraphic(160, 15, Const.HUD_BACKGROUND_COLOR);
         add(background);
 
         // shield
@@ -77,12 +78,12 @@ class HUD extends FlxGroup {
         var fontAngelCode = FlxBitmapFont.fromAngelCode(AssetPaths.pixel3x5__png, XMLData);
 
         var worldLabel = new FlxSprite(131, 1, AssetPaths.world_label__png);
-        worldLabel.color = 0xcf3c71;
+        worldLabel.color = Const.TEXT_COLOR;
         add(worldLabel);
 
         worldText = new FlxBitmapText(fontAngelCode);
         worldText.setPosition(155, -4);
-        worldText.color = 0xcf3c71;
+        worldText.color = Const.TEXT_COLOR;
         add(worldText);
 
         var pointsLabel = new FlxSprite(105, 8, AssetPaths.score_label__png);
