@@ -13,6 +13,8 @@ class Enemy extends FlxSprite {
     var scene:PlayState;
     var name:String;
     public var points:Int;
+    var hitPoints:Int;
+    public var collisionDamage:Int;
 
     public function new (scene:PlayState) {
         super(0, 0);
@@ -37,6 +39,8 @@ class Enemy extends FlxSprite {
 
         name = enemyType.name;
         points = enemyType.points;
+        hitPoints = enemyType.hitPoints;
+        collisionDamage = enemyType.collisionDamage;
 
         if (enemyType.pattern == Direct) {
             velocity.set(0, enemyType.yVel);
@@ -56,14 +60,18 @@ class Enemy extends FlxSprite {
 
         if (y > Const.BOTTOM_END) {
             scene.points -= points;
+            scene.livingEnemies--;
             kill();
         }
 
         super.update(elapsed);
     }
 
-    override public function kill () {
-        super.kill();
-        scene.livingEnemies--;
+    public function damage (pts:Int) {
+        hitPoints -= pts;
+        if (hitPoints <= 0) {
+            scene.destroyEnemy(this);
+            this.kill();
+        }
     }
 }

@@ -290,22 +290,27 @@ class PlayState extends FlxState {
     }
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
-        // TODO: don't kill enemy here, only if they've lost hitpoints
-        // do we subtract or add points here?
+        // do we subtract or add points here? right now we do neither
         createExplosion(Utils.getSpriteCenter(enemy));
         enemy.kill();
+        livingEnemies--;
 
         if (!player.isHurt) {
-            player.damage(10, 'body');
+            player.damage(enemy.collisionDamage, 'body');
         }
     }
 
     function overlapProjectileWithEnemy (proj:Projectile, enemy:Enemy) {
+        enemy.damage(proj.damage);
+        proj.kill();
+    }
+
+    public function destroyEnemy (enemy:Enemy) {
+        // TODO: have specific explosion happen per enemy category
+        // TODO: potentially spawn powerup
         createExplosion(Utils.getSpriteCenter(enemy));
         points += enemy.points;
-        // TODO: potentially spawn powerup
-        enemy.kill();
-        proj.kill();
+        livingEnemies--;
     }
 
     public function shoot (x:Float, y:Float, weapon:WeaponType) {

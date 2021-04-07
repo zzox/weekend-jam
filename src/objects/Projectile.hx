@@ -8,6 +8,8 @@ typedef ProjOptions = {
 }
 
 class Projectile extends FlxSprite {
+    public var damage:Int;
+
     public function new () {
         super(0, 0);
 
@@ -28,5 +30,6 @@ class Projectile extends FlxSprite {
         offset.set(weapon.offset.x, weapon.offset.y);
         animation.play(weapon.animName);
         velocity.set(weapon.velocity.x * leftFlip, weapon.velocity.y);
+        damage = weapon.damage;
     }
 }

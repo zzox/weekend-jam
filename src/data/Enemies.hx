@@ -16,6 +16,8 @@ enum EnemyPattern {
 typedef EnemyInfo = {
     var name:String;
     var points:Int;
+    var hitPoints:Int;
+    var collisionDamage:Int;
     var offset:FlxPoint;
     var size:FlxPoint;
     var pattern:EnemyPattern;
@@ -33,6 +35,8 @@ class Enemies {
         SmallRedTwin => {
             name: "small-red-twin",
             points: 100,
+            hitPoints: 1,
+            collisionDamage: 5,
             offset: new FlxPoint(8, 9),
             size: new FlxPoint(8, 4),
             pattern: Direct,
@@ -41,6 +45,8 @@ class Enemies {
         SmallGreenTwin => {
             name: "small-green-twin",
             points: 250,
+            hitPoints: 1,
+            collisionDamage: 10,
             offset: new FlxPoint(8, 9),
             size: new FlxPoint(8, 4),
             pattern: Direct,
@@ -49,6 +55,8 @@ class Enemies {
         SmallBlueSquid => {
             name: "small-blue-squid",
             points: 500,
+            hitPoints: 1,
+            collisionDamage: 12,
             offset: new FlxPoint(9, 10),
             size: new FlxPoint(7, 6),
             pattern: DirectXY,
