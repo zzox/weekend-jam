@@ -1,7 +1,6 @@
 package;
 
 import display.HUD;
-import flixel.tweens.FlxEase;
 import actors.Player;
 import actors.Enemy;
 import data.Enemies;
@@ -21,6 +20,7 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.text.FlxBitmapText;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import objects.Projectile;
@@ -202,8 +202,8 @@ class PlayState extends FlxState {
     }
 
     function winLevel () {
-        hud.winBg.visible = true;
-        hud.winText.visible = true;
+        hud.bannerBg.visible = true;
+        hud.bannerText.visible = true;
 
         tweenPlayerToCenter();
     }
@@ -340,8 +340,8 @@ class PlayState extends FlxState {
         FlxTween.tween(player, { x: PLAYER_START_X }, TRANSITION_TIME, { ease: FlxEase.cubeOut });
         FlxTween.tween(player, { y: PLAYER_START_Y }, TRANSITION_TIME, { ease: FlxEase.cubeInOut, onComplete:
             (_:FlxTween) -> {
-                hud.winBg.visible = false;
-                hud.winText.visible = false;
+                hud.bannerBg.visible = false;
+                hud.bannerText.visible = false;
                 player.inControl = true;
             }
         });
