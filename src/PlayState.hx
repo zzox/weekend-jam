@@ -1,6 +1,5 @@
 package;
 
-import display.HUD;
 import actors.Player;
 import actors.Enemy;
 import data.Enemies;
@@ -9,6 +8,7 @@ import data.Waves;
 import data.Weapons;
 import display.Background;
 import display.Explosion;
+import display.HUD;
 import display.Store;
 import flixel.FlxState;
 import flixel.FlxG;
@@ -24,12 +24,13 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import objects.Projectile;
+import objects.Powerup;
 import openfl.utils.Assets;
 
 enum GameState {
     Playing;
     MainMenu;
-    Store;
+    StoreState;
     GameOver;
 }
 
@@ -49,6 +50,8 @@ class PlayState extends FlxState {
     var enemies:FlxTypedGroup<Enemy>;
     var projectiles:FlxTypedGroup<Projectile>;
     var explosions:FlxTypedGroup<Explosion>;
+    public var storePowerups:FlxTypedGroup<Powerup>;
+    var levelPowerups:FlxTypedGroup<Powerup>;
 
     public var worldIndex:Int;
     var waveIndex:Int;
@@ -124,6 +127,9 @@ class PlayState extends FlxState {
         hud.visible = false;
         add(hud);
 
+        storePowerups = new FlxTypedGroup<Powerup>();
+        add(storePowerups);
+
         // GAME OVER BANNER
         var textBytes = Assets.getText(AssetPaths.pixel3x5__fnt);
         var XMLData = Xml.parse(textBytes);
@@ -170,6 +176,8 @@ class PlayState extends FlxState {
             if (anyKey) {
                 startLevel();
             }
+        } else if (gameState == StoreState) {
+            FlxG.overlap(storePowerups, player, overlapStorePowerup);
         } else if (gameState == GameOver) {
             if (anyKey) {
                 FlxG.switchState(new PlayState());
@@ -199,11 +207,17 @@ class PlayState extends FlxState {
             waveSound.onComplete = () -> loopTime = 0;
         });
         hud.visible = true;
+        store.visible = false;
+        storePowerups.visible = false;
     }
 
     function winLevel () {
         hud.bannerBg.visible = true;
         hud.bannerText.visible = true;
+        worldIndex++;
+
+        // TODO: check if world index is over the level list.
+        // If so, win the game
 
         tweenPlayerToCenter();
     }
@@ -254,7 +268,7 @@ class PlayState extends FlxState {
                 }
 
                 if (waveIndex == world.waves.length) {
-                    gameState = Store;
+                    gameState = StoreState;
                     winLevel();
                 }
             }
@@ -343,12 +357,23 @@ class PlayState extends FlxState {
                 hud.bannerBg.visible = false;
                 hud.bannerText.visible = false;
                 player.inControl = true;
+
+                // TODO: only create store after level is complete
+                if (gameState == StoreState) {
+                    store.createStore();
+                }
             }
         });
     }
 
-    function overlapPowerup () {
-        // if we have points, we buy it.
-        // if we don't, nothing happens
+    function overlapStorePowerup (powerup:Powerup, _:Player) {
+        // buy what we overlap, subtract points.
+        // anything we can't buy after the purchase disappears.
+        // if it's go, we start the next level.
+        powerup.select();
+
+        if (powerup.type == Go) {
+            new FlxTimer().start(1, (_:FlxTimer) -> startLevel());
+        }
     }
 }
