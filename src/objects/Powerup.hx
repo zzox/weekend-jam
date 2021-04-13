@@ -33,7 +33,7 @@ class Powerup extends FlxSprite {
         MidTrips => { cost: 50000, animation: 'mid-trips' },
         Backshoot => { cost: 75000, animation: 'back-shoot' },
         SideTrips => { cost: 100000, animation: 'side-trips' },
-        Double => { cost: 1000000, animation: 'double' }
+        Double => { animation: 'double' }
     ];
 
     public function new (x:Float, y:Float, type:PowerupTypes) {
@@ -58,7 +58,7 @@ class Powerup extends FlxSprite {
 
     public function select ():PowerupTypes {
         selected = true;
-        FlxTween.tween(scale, { x: 0 }, 0.75, { onComplete: (_:FlxTween) -> this.kill() });
+        FlxTween.tween(scale, { x: 0 }, 0.5, { onComplete: (_:FlxTween) -> this.kill() });
         return type;
     }
 }

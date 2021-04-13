@@ -305,7 +305,7 @@ class PlayState extends FlxState {
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
         // do we subtract or add points here? right now we do neither
-        createExplosion(Utils.getSpriteCenter(enemy));
+        createExplosion(Utils.getSpriteCenter(enemy), enemy.explosionType);
         enemy.kill();
         livingEnemies--;
 
@@ -322,7 +322,7 @@ class PlayState extends FlxState {
     public function destroyEnemy (enemy:Enemy) {
         // TODO: have specific explosion happen per enemy category
         // TODO: potentially spawn powerup
-        createExplosion(Utils.getSpriteCenter(enemy));
+        createExplosion(Utils.getSpriteCenter(enemy), enemy.explosionType);
         points += enemy.points;
         livingEnemies--;
     }
@@ -339,9 +339,9 @@ class PlayState extends FlxState {
         }
     }
 
-    public function createExplosion (point:FlxPoint) {
-        var exp = explosions.recycle(Explosion);
-        exp.explode(point.x, point.y);
+    public function createExplosion (point:FlxPoint, type:String) {
+        explosions.recycle(Explosion)
+            .explode(point.x, point.y, type);
     }
 
     function tweenPlayerToCenter () {

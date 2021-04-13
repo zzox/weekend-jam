@@ -2,6 +2,7 @@ package data;
 
 import data.Structures;
 import data.Enemies;
+
 /**
     Big Static Map with Arrays of waves and subwaves for each level
 **/

@@ -23,14 +23,10 @@ typedef EnemyInfo = {
     var pattern:EnemyPattern;
     var ?xVel:Int;
     var ?yVel:Int;
+    var explosionType:String;
 }
 
-/**
-    Big Static Map with Arrays of waves and subwaves for each level
-**/
 class Enemies {
-    // static inline final
-
     public static final data:Map<EnemyType, EnemyInfo> = [
         SmallRedTwin => {
             name: "small-red-twin",
@@ -40,7 +36,8 @@ class Enemies {
             offset: new FlxPoint(8, 9),
             size: new FlxPoint(8, 4),
             pattern: Direct,
-            yVel: 30
+            yVel: 30,
+            explosionType: 'explode-small'
         },
         SmallGreenTwin => {
             name: "small-green-twin",
@@ -50,7 +47,8 @@ class Enemies {
             offset: new FlxPoint(8, 9),
             size: new FlxPoint(8, 4),
             pattern: Direct,
-            yVel: 60
+            yVel: 60,
+            explosionType: 'explode-small'
         },
         SmallBlueSquid => {
             name: "small-blue-squid",
@@ -62,6 +60,7 @@ class Enemies {
             pattern: DirectXY,
             xVel: 30,
             yVel: 30,
+            explosionType: 'explode-small'
         }
     ];
 }

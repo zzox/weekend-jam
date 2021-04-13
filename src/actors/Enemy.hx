@@ -15,6 +15,7 @@ class Enemy extends FlxSprite {
     public var points:Int;
     var hitPoints:Int;
     public var collisionDamage:Int;
+    public var explosionType:String;
 
     public function new (scene:PlayState) {
         super(0, 0);
@@ -41,6 +42,7 @@ class Enemy extends FlxSprite {
         points = enemyType.points;
         hitPoints = enemyType.hitPoints;
         collisionDamage = enemyType.collisionDamage;
+        explosionType = enemyType.explosionType;
 
         if (enemyType.pattern == Direct) {
             velocity.set(0, enemyType.yVel);
