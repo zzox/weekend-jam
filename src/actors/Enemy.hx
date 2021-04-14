@@ -2,6 +2,7 @@ package actors;
 
 import data.Constants as Const;
 import data.Enemies;
+import data.Waves;
 import flixel.FlxSprite;
 
 typedef PatternInfo = {
@@ -48,6 +49,11 @@ class Enemy extends FlxSprite {
         explosionType = enemyType.explosionType;
         shooters = enemyType.shooters != null ? enemyType.shooters.copy() : [];
 
+        // needed to sync offset to beat, since offset is never updated
+        for (shooter in shooters) {
+            shooter.offset = Waves.convertBeatsToSeconds(shooter.offset, Waves.data[scene.worldIndex].bpm);
+        }
+
         if (enemyType.pattern == Direct) {
             velocity.set(0, enemyType.yVel);
         } else if (enemyType.pattern == DirectXY) {
@@ -77,7 +83,7 @@ class Enemy extends FlxSprite {
 
                 if (shooter.shootTime < 0) {
                     scene.enemyShoot(x + shooter.position.x, y + shooter.position.y, shooter.type);
-                    shooter.shootTime += shooter.reloadTime;
+                    shooter.shootTime += Waves.convertBeatsToSeconds(shooter.reloadTime, Waves.data[scene.worldIndex].bpm);
                 }
             }
         }

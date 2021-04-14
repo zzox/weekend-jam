@@ -203,10 +203,6 @@ class PlayState extends FlxState {
         livingEnemies = 0;
         subwavesDone = false;
 
-        // move to function to change according to powerups AND bpm
-        player.weapons[0].reloadTime = Waves.convertBeatsToSeconds(1, Waves.data[worldIndex].bpm);
-        player.weapons[1].reloadTime = Waves.convertBeatsToSeconds(2, Waves.data[worldIndex].bpm);
-
         gameState = Playing;
 
         tweenPlayerToCenter();

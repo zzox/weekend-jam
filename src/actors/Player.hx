@@ -1,6 +1,7 @@
 package actors;
 
 import data.Constants as Const;
+import data.Waves;
 import data.Weapons;
 import flixel.FlxSprite;
 import flixel.FlxG;
@@ -74,7 +75,7 @@ class Player extends FlxSprite {
 
         weapons = [];
         weapons.push({ type: PlayerBullet, shootTime: 0, reloadTime: 1 });
-        weapons.push({ type: PlayerBall, shootTime: 0, reloadTime: 1 });
+        weapons.push({ type: PlayerBall, shootTime: 0, reloadTime: 2 });
     }
 
     override public function update (elapsed:Float) {
@@ -230,10 +231,8 @@ class Player extends FlxSprite {
         if (FlxG.keys.anyPressed([SPACE, Z])) {
             for (weapon in weapons) {
                 if (weapon.shootTime <= 0) {
-
-                    // weaponType
                     scene.shoot(x + (getHitbox().width / 2) - 1, y, weapon.type);
-                    weapon.shootTime += weapon.reloadTime;
+                    weapon.shootTime += Waves.convertBeatsToSeconds(weapon.reloadTime, Waves.data[scene.worldIndex].bpm);
                 }
             }
         }
