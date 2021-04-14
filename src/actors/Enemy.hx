@@ -16,6 +16,8 @@ class Enemy extends FlxSprite {
     var hitPoints:Int;
     public var collisionDamage:Int;
     public var explosionType:String;
+    var shooters:Array<Shooter>;
+    var time:Float;
 
     public function new (scene:PlayState) {
         super(0, 0);
@@ -26,6 +28,7 @@ class Enemy extends FlxSprite {
         animation.add("small-red-twin", [0, 1, 2], 12);
         animation.add("small-green-twin", [3, 4, 5], 12);
         animation.add("small-blue-squid", [6, 7, 8], 12);
+        animation.add("red-twin-shooter", [9, 10, 11], 12);
     }
 
     public function start (x:Float, y:Float, type:EnemyType) {
@@ -43,6 +46,7 @@ class Enemy extends FlxSprite {
         hitPoints = enemyType.hitPoints;
         collisionDamage = enemyType.collisionDamage;
         explosionType = enemyType.explosionType;
+        shooters = enemyType.shooters != null ? enemyType.shooters.copy() : [];
 
         if (enemyType.pattern == Direct) {
             velocity.set(0, enemyType.yVel);
@@ -64,6 +68,18 @@ class Enemy extends FlxSprite {
             scene.points -= points;
             scene.livingEnemies--;
             kill();
+        }
+
+        for (shooter in shooters) {
+            shooter.offset -= elapsed;
+            if (shooter.offset < 0) {
+                shooter.shootTime -= elapsed;
+
+                if (shooter.shootTime < 0) {
+                    scene.enemyShoot(x + shooter.position.x, y + shooter.position.y, shooter.type);
+                    shooter.shootTime += shooter.reloadTime;
+                }
+            }
         }
 
         super.update(elapsed);

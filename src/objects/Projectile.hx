@@ -17,6 +17,8 @@ class Projectile extends FlxSprite {
 
         animation.add('small-player-bullet', [0, 1], 12);
         animation.add('small-player-ball', [2, 3], 12);
+        animation.add('small-enemy-bullet', [4, 5], 12);
+        animation.add('small-enemy-ball', [6, 7], 12);
     }
 
     public function shoot (xPos:Float, yPos:Float, weapon:Weapon, ?options:ProjOptions) {

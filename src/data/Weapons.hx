@@ -5,11 +5,13 @@ import flixel.math.FlxPoint;
 enum WeaponType {
     PlayerBullet;
     PlayerBall;
+    EnemyBullet;
 }
 
 enum ShootStyle {
     PlayerOneShot;
     PlayerTwoShots;
+    EnemyOneShot;
 }
 
 typedef Weapon = {
@@ -41,6 +43,15 @@ class Weapons {
             offset: new FlxPoint(7, 7),
             velocity: new FlxPoint(60, -240),
             style: PlayerTwoShots
+        },
+        EnemyBullet => {
+            reloadTime: 2,
+            animName: 'small-enemy-bullet',
+            damage: 10,
+            size: new FlxPoint(2, 2),
+            offset: new FlxPoint(7, 7),
+            velocity: new FlxPoint(0, 120),
+            style: EnemyOneShot
         }
     ];
 }

@@ -42,5 +42,13 @@ class Waves {
             { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 20 },
             { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 22 }
         ]]
+    }, {
+        bpm: 128,
+        song: AssetPaths.int1__wav,
+        waves: [[
+            { type: SmallGreenTwin, quantity: 2, shape: TwoMiddle, beats: 0 },
+            { type: SmallRedTwin, quantity: 2, shape: TwoWide, beats: 1 },
+            { type: RedTwinShooter, quantity: 1, shape: OneMiddle, beats: 2 }
+        ]]
     }];
 }

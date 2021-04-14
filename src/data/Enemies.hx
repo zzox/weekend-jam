@@ -1,16 +1,26 @@
 package data;
 
+import data.Weapons;
 import flixel.math.FlxPoint;
 
 enum EnemyType {
     SmallRedTwin;
     SmallGreenTwin;
     SmallBlueSquid;
+    RedTwinShooter;
 }
 
 enum EnemyPattern {
     Direct;
     DirectXY;
+}
+
+typedef Shooter = {
+    var offset:Float;
+    var shootTime:Float;
+    var reloadTime:Float;
+    var position:FlxPoint;
+    var type:WeaponType;
 }
 
 typedef EnemyInfo = {
@@ -24,6 +34,7 @@ typedef EnemyInfo = {
     var ?xVel:Int;
     var ?yVel:Int;
     var explosionType:String;
+    var ?shooters:Array<Shooter>;
 }
 
 class Enemies {
@@ -61,6 +72,30 @@ class Enemies {
             xVel: 30,
             yVel: 30,
             explosionType: 'explode-small'
+        },
+        RedTwinShooter => {
+            name: "red-twin-shooter",
+            points: 2000,
+            hitPoints: 3,
+            collisionDamage: 20,
+            offset:  new FlxPoint(6, 10),
+            size: new FlxPoint(12, 7),
+            pattern: Direct,
+            yVel: 30,
+            explosionType: 'explode-medium',
+            shooters: [{
+                offset: 1,
+                shootTime: 0,
+                reloadTime: 2,
+                position: new FlxPoint(1, 7),
+                type: EnemyBullet
+            }, {
+                offset: 0,
+                shootTime: 0,
+                reloadTime: 2,
+                position: new FlxPoint(9, 7),
+                type: EnemyBullet
+            }]
         }
     ];
 }

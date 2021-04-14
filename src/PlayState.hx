@@ -49,6 +49,7 @@ class PlayState extends FlxState {
     public var player:Null<Player>;
     var enemies:FlxTypedGroup<Enemy>;
     var projectiles:FlxTypedGroup<Projectile>;
+    var enemyProjectiles:FlxTypedGroup<Projectile>;
     var explosions:FlxTypedGroup<Explosion>;
     public var storePowerups:FlxTypedGroup<Powerup>;
     var levelPowerups:FlxTypedGroup<Powerup>;
@@ -115,6 +116,14 @@ class PlayState extends FlxState {
         }
         add(projectiles);
 
+        enemyProjectiles = new FlxTypedGroup<Projectile>(PROJ_POOL_SIZE);
+        var proj = new Projectile();
+        for (_ in 0...PROJ_POOL_SIZE) {
+            proj.kill();
+            enemyProjectiles.add(proj);
+        }
+        add(enemyProjectiles);
+
         explosions = new FlxTypedGroup<Explosion>(EXPLOSION_POOL_SIZE);
         for (_ in 0...EXPLOSION_POOL_SIZE) {
             var explo = new Explosion();
@@ -151,7 +160,8 @@ class PlayState extends FlxState {
         gameState = MainMenu;
         ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
 
-        worldIndex = 0;
+        //TEMP: worldIndex = 0;
+        worldIndex = 1;
         points = 0;
     }
 
@@ -336,6 +346,18 @@ class PlayState extends FlxState {
         if (bullet.style == PlayerTwoShots) {
             var proj = projectiles.recycle(Projectile);
             proj.shoot(x, y, bullet, { flipXVel: true });        
+        }
+    }
+
+    public function enemyShoot (x:Float, y:Float, weapon:WeaponType) {
+        var bullet = Weapons.data[weapon];
+
+        var proj = enemyProjectiles.recycle(Projectile);
+        proj.shoot(x, y, bullet);
+
+        if (bullet.style == PlayerTwoShots) {
+            var proj = enemyProjectiles.recycle(Projectile);
+            proj.shoot(x, y, bullet, { flipXVel: true });
         }
     }
 
