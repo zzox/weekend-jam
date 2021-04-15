@@ -39,9 +39,9 @@ class Powerup extends FlxSprite {
     public function new (x:Float, y:Float, type:PowerupTypes) {
         super(x, y);
         this.type = type;
+        loadGraphic(AssetPaths.powerups__png, true, 16, 16);
         offset.set(2, 2);
         setSize(12, 12);
-        loadGraphic(AssetPaths.powerups__png, true, 16, 16);
         animation.add('go', [0]);
         animation.add('double', [1]);
         animation.add('forward-trips', [2]);
