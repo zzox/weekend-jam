@@ -160,8 +160,7 @@ class PlayState extends FlxState {
         gameState = MainMenu;
         ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
 
-        //TEMP: worldIndex = 0;
-        worldIndex = 1;
+        worldIndex = 0;
         points = 0;
     }
 
@@ -228,7 +227,6 @@ class PlayState extends FlxState {
         tweenPlayerToCenter();
     }
 
-    // TODO: show score in banner
     public function gameOver () {
         player = null;
         FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME);
@@ -284,7 +282,8 @@ class PlayState extends FlxState {
                 var enemyShape:Array<Int> = Structures.getStructure(subwaveItem.shape, subwaveItem.quantity);
 
                 for (xPos in enemyShape) {
-                    createEnemy(xPos, -(Waves.convertBeatsToSeconds(1, world.bpm) * 30), subwaveItem.type);
+                    var yVel = Enemies.data[subwaveItem.type].yVel;
+                    createEnemy(xPos, -(Waves.convertBeatsToSeconds(1, world.bpm) * yVel) + HUD.HEIGHT, subwaveItem.type);
                 }
 
                 subwaveIndex++;

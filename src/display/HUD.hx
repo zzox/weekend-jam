@@ -8,6 +8,7 @@ import flixel.text.FlxBitmapText;
 import openfl.Assets;
 
 class HUD extends FlxGroup {
+    public static inline final HEIGHT = 15;
     static inline final SHIELD_COLOR = 0x0a89ff;
     static inline final HEALTH_START_COLOR = 0xffbb31;
     static inline final LOW_HEALTH_COLOR = 0xe03c28;
@@ -36,7 +37,7 @@ class HUD extends FlxGroup {
         this.scene = scene;
 
         background = new FlxSprite(0, 0);
-        background.makeGraphic(160, 15, Const.HUD_BACKGROUND_COLOR);
+        background.makeGraphic(160, HEIGHT, Const.HUD_BACKGROUND_COLOR);
         add(background);
 
         // shield

@@ -32,7 +32,7 @@ typedef EnemyInfo = {
     var size:FlxPoint;
     var pattern:EnemyPattern;
     var ?xVel:Int;
-    var ?yVel:Int;
+    var yVel:Int;
     var explosionType:String;
     var ?shooters:Array<Shooter>;
 }
