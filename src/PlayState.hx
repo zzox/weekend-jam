@@ -175,6 +175,7 @@ class PlayState extends FlxState {
         if (gameState == Playing) {
             FlxG.overlap(enemies, player, overlapPlayerWithEnemy);
             FlxG.overlap(projectiles, enemies, overlapProjectileWithEnemy);
+            FlxG.overlap(enemyProjectiles, player, overlapEnemyProjectileWithPlayer);
 
             loopTime += elapsed;
 
@@ -309,18 +310,24 @@ class PlayState extends FlxState {
     }
 
     function overlapPlayerWithEnemy (enemy:Enemy, player:Player) {
-        // do we subtract or add points here? right now we do neither
         createExplosion(Utils.getSpriteCenter(enemy), enemy.explosionType);
         enemy.kill();
         livingEnemies--;
 
-        if (!player.isHurt) {
-            player.damage(enemy.collisionDamage, 'body');
-        }
+        // when overlapping an enemy, there are no iFrames
+        player.damage(enemy.collisionDamage, 'body');
     }
 
     function overlapProjectileWithEnemy (proj:Projectile, enemy:Enemy) {
         enemy.damage(proj.damage);
+        proj.kill();
+    }
+
+    function overlapEnemyProjectileWithPlayer (proj:Projectile, player:Player) {
+        // hurt iFrames
+        if (!player.isHurt) {
+            player.damage(proj.damage, 'shield');
+        }
         proj.kill();
     }
 
