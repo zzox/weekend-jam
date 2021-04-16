@@ -1,5 +1,6 @@
 package;
 
+import display.Banner;
 import actors.Player;
 import actors.Enemy;
 import data.Enemies;
@@ -69,7 +70,7 @@ class PlayState extends FlxState {
     var loopTime:Float = 0.0;
 
     var hud:HUD;
-    var gameOverBanner:FlxGroup;
+    var banner:Banner;
 
     var store:Store;
 
@@ -139,23 +140,8 @@ class PlayState extends FlxState {
         storePowerups = new FlxTypedGroup<Powerup>();
         add(storePowerups);
 
-        // GAME OVER BANNER
-        var textBytes = Assets.getText(AssetPaths.pixel3x5__fnt);
-        var XMLData = Xml.parse(textBytes);
-        var fontAngelCode = FlxBitmapFont.fromAngelCode(AssetPaths.pixel3x5__png, XMLData);
-
-        gameOverBanner = new FlxGroup();
-        var goBg = new FlxSprite(0, 112);
-        goBg.makeGraphic(160, 13, 0xff211640);
-        gameOverBanner.add(goBg);
-
-        var goText = new FlxBitmapText(fontAngelCode);
-        goText.setPosition(40, 110);
-        goText.text = 'G A M E  O V E R';
-        gameOverBanner.add(goText);
-
-        gameOverBanner.visible = false;
-        add(gameOverBanner);
+        banner = new Banner();
+        add(banner);
 
         gameState = MainMenu;
         ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
@@ -218,8 +204,8 @@ class PlayState extends FlxState {
     }
 
     function winLevel () {
-        hud.bannerBg.visible = true;
-        hud.bannerText.visible = true;
+        banner.display('L E V E L  C O M P L E T E', TRANSITION_TIME);
+
         worldIndex++;
 
         // TODO: check if world index is over the level list.
@@ -231,7 +217,7 @@ class PlayState extends FlxState {
     public function gameOver () {
         player = null;
         FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME);
-        gameOverBanner.visible = true;
+        banner.display('G A M E  O V E R');
 
         new FlxTimer().start(1.5, (_:FlxTimer) -> {
             // show score
@@ -374,8 +360,6 @@ class PlayState extends FlxState {
         FlxTween.tween(player, { x: PLAYER_START_X }, TRANSITION_TIME, { ease: FlxEase.cubeOut });
         FlxTween.tween(player, { y: PLAYER_START_Y }, TRANSITION_TIME, { ease: FlxEase.cubeInOut, onComplete:
             (_:FlxTween) -> {
-                hud.bannerBg.visible = false;
-                hud.bannerText.visible = false;
                 player.inControl = true;
 
                 // TODO: only create store after level is complete
