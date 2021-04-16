@@ -5,7 +5,11 @@ import data.Waves;
 import data.Weapons;
 import flixel.FlxSprite;
 import flixel.FlxG;
-import flixel.math.FlxPoint;
+
+enum DamageType {
+    BodyDamage;
+    ShieldDamage;
+}
 
 typedef HoldsObj = {
     var left:Float;
@@ -256,8 +260,21 @@ class Player extends FlxSprite {
         }
     }
 
-    public function damage (points:Int, type:String) {
-        hitPoints -= points;
+    public function damage (points:Int, type:DamageType) {
+        var remainder = 0;
+        if (type == ShieldDamage) {
+            shieldPoints -= points;
+            if (shieldPoints < 0) {
+                remainder = shieldPoints;
+                shieldPoints = 0;
+            }
+
+            if (remainder < 0) {
+                hitPoints += remainder;
+            }
+        } else if (type == BodyDamage) {
+            hitPoints -= points;
+        }
 
         if (hitPoints <= 0) {
             die();

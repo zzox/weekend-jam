@@ -110,7 +110,7 @@ class HUD extends FlxGroup {
         if (scene.player != null) {
             var shield = scene.player.shieldPoints;
             for (i in 0...shieldContent.length) {
-                shieldContent[i].visible = i <= shield / 2;
+                shieldContent[i].visible = i < shield / 2;
             }
 
             var health = scene.player.hitPoints;

@@ -246,11 +246,6 @@ class PlayState extends FlxState {
         });
     }
 
-    function generateStore () {
-        // first, we generate the items
-        // we show what bgs we have, if we have them
-    }
-
     function handleEnemySpawn (elapsed:Float) {
         gameTime += elapsed;
 
@@ -315,7 +310,7 @@ class PlayState extends FlxState {
         livingEnemies--;
 
         // when overlapping an enemy, there are no iFrames
-        player.damage(enemy.collisionDamage, 'body');
+        player.damage(enemy.collisionDamage, BodyDamage);
     }
 
     function overlapProjectileWithEnemy (proj:Projectile, enemy:Enemy) {
@@ -326,7 +321,7 @@ class PlayState extends FlxState {
     function overlapEnemyProjectileWithPlayer (proj:Projectile, player:Player) {
         // hurt iFrames
         if (!player.isHurt) {
-            player.damage(proj.damage, 'shield');
+            player.damage(proj.damage, ShieldDamage);
         }
         proj.kill();
     }
@@ -345,6 +340,7 @@ class PlayState extends FlxState {
         var proj = projectiles.recycle(Projectile);
         proj.shoot(x, y, bullet);
 
+        // TODO: add a bullet duplicate type
         if (bullet.style == PlayerTwoShots) {
             var proj = projectiles.recycle(Projectile);
             proj.shoot(x, y, bullet, { flipXVel: true });        

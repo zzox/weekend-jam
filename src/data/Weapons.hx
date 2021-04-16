@@ -47,7 +47,7 @@ class Weapons {
         EnemyBullet => {
             reloadTime: 2,
             animName: 'small-enemy-bullet',
-            damage: 10,
+            damage: 5,
             size: new FlxPoint(2, 2),
             offset: new FlxPoint(7, 7),
             velocity: new FlxPoint(0, 120),
