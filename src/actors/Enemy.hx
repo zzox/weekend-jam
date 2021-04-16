@@ -10,6 +10,11 @@ typedef PatternInfo = {
 }
 
 class Enemy extends FlxSprite {
+    static inline final HURT_TIME = 1.0;
+    static inline final HURT_COLOR = 0xffbb311;
+    static inline final CLEAR = 0xffffff;
+    static final HURT_FLASHES:Array<Int> = [0, 0, 1, 1, 1, 1];
+
     var pattern:EnemyPattern;
     var scene:PlayState;
     var name:String;
@@ -19,6 +24,9 @@ class Enemy extends FlxSprite {
     public var explosionType:String;
     var shooters:Array<Shooter>;
     var time:Float;
+    var isHurt:Bool;
+    var hurtTime:Float;
+    var hurtFlashIndex:Int;
 
     public function new (scene:PlayState) {
         super(0, 0);
@@ -65,6 +73,8 @@ class Enemy extends FlxSprite {
 
             velocity.set(enemyType.xVel * xDir, enemyType.yVel);
         }
+
+        hurtFlashIndex = 0;
     }
 
     override public function update (elapsed:Float) {
@@ -88,6 +98,20 @@ class Enemy extends FlxSprite {
             }
         }
 
+        if (isHurt) {
+            if (hurtTime > 0) {
+                hurtTime -= elapsed;
+
+                hurtFlashIndex = (hurtFlashIndex + 1) % HURT_FLASHES.length;
+
+                color = HURT_FLASHES[hurtFlashIndex] == 1 ? HURT_COLOR : CLEAR;
+            } else {
+                isHurt = false;
+                hurtFlashIndex = 0;
+                color = CLEAR;
+            }
+        }
+
         super.update(elapsed);
     }
 
@@ -96,6 +120,9 @@ class Enemy extends FlxSprite {
         if (hitPoints <= 0) {
             scene.destroyEnemy(this);
             this.kill();
+        } else {
+            isHurt = true;
+            hurtTime = HURT_TIME; // may be needed to make dynamic in the future
         }
     }
 }
