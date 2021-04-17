@@ -28,7 +28,7 @@ class Powerup extends FlxSprite {
         Go => { animation: 'go' },
         Clear => { cost: 5000, animation: 'clear' },
         Shield => { cost: 10000, animation: 'shield' },
-        Repair => { cost: 20000, animation: 'repair' },
+        Repair => { cost: 50000, animation: 'repair' },
         ForwardTrips => { cost: 50000, animation: 'forward-trips' },
         MidTrips => { cost: 50000, animation: 'mid-trips' },
         Backshoot => { cost: 75000, animation: 'back-shoot' },

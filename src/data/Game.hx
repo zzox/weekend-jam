@@ -16,12 +16,14 @@ class Game {
     ];
 
     public function new (scene:PlayState) {
+        // get high score from storage
         this.scene = scene;
     }
 
     public function checkPoints (points:Int): Null<PowerupTypes> {
         var currentPowerup = pointPowerups[0];
-        if (currentPowerup != null && points > currentPowerup.points) {
+        if (currentPowerup != null && points >= currentPowerup.points) {
+            pointPowerups.splice(0, 1);
             return currentPowerup.type;
         }
 

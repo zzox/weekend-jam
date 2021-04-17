@@ -75,6 +75,7 @@ class BackgroundItem extends FlxSprite {
         if (type == Star) {
             loadGraphic(AssetPaths.stars__png, true, 4, 4);
             animation.add('small-star', [0]);
+            animation.add('far-star', [1]);
             animation.play(name);
 
             velocity.set(0, Math.random() * STAR_SPEED_MAX);

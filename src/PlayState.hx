@@ -4,6 +4,7 @@ import display.Banner;
 import actors.Player;
 import actors.Enemy;
 import data.Enemies;
+import data.Game;
 import data.Structures;
 import data.Waves;
 import data.Weapons;
@@ -13,20 +14,15 @@ import display.HUD;
 import display.Store;
 import flixel.FlxState;
 import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.graphics.frames.FlxBitmapFont;
-import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
-import flixel.text.FlxBitmapText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import objects.Projectile;
 import objects.Powerup;
-import openfl.utils.Assets;
 
 enum GameState {
     Playing;
@@ -43,8 +39,10 @@ class PlayState extends FlxState {
     static inline final PLAYER_START_Y = 200;
     static inline final PLAYER_RESPAWN_Y = 300;
     static inline final TRANSITION_TIME = 3.0;
+    static inline final POWERUP_MIDDLE = 6;
 
     public var gameState:GameState;
+    var gameData:Game;
 
     var background:Background;
     public var player:Null<Player>;
@@ -52,8 +50,7 @@ class PlayState extends FlxState {
     var projectiles:FlxTypedGroup<Projectile>;
     var enemyProjectiles:FlxTypedGroup<Projectile>;
     var explosions:FlxTypedGroup<Explosion>;
-    public var storePowerups:FlxTypedGroup<Powerup>;
-    var levelPowerups:FlxTypedGroup<Powerup>;
+    public var powerups:FlxTypedGroup<Powerup>;
 
     public var worldIndex:Int;
     var waveIndex:Int;
@@ -137,14 +134,16 @@ class PlayState extends FlxState {
         hud.visible = false;
         add(hud);
 
-        storePowerups = new FlxTypedGroup<Powerup>();
-        add(storePowerups);
+        powerups = new FlxTypedGroup<Powerup>();
+        add(powerups);
 
         banner = new Banner();
         add(banner);
 
         gameState = MainMenu;
         ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
+
+        gameData = new Game(this);
 
         worldIndex = 0;
         points = 0;
@@ -173,7 +172,7 @@ class PlayState extends FlxState {
                 startLevel();
             }
         } else if (gameState == StoreState) {
-            FlxG.overlap(storePowerups, player, overlapStorePowerup);
+            FlxG.overlap(powerups, player, overlapPowerup);
         } else if (gameState == GameOver) {
             if (anyKey) {
                 FlxG.switchState(new PlayState());
@@ -200,7 +199,7 @@ class PlayState extends FlxState {
         });
         hud.visible = true;
         store.visible = false;
-        storePowerups.visible = false;
+        powerups.visible = false;
     }
 
     function winLevel () {
@@ -270,7 +269,7 @@ class PlayState extends FlxState {
 
                 subwaveIndex++;
 
-                // check to see enemyCount if we should go to the next wave
+                // check to see enemyCount if we should go to the next subWave
                 if (subwaveIndex == world.waves[waveIndex].length) {
                     subwavesDone = true;
                 }
@@ -313,11 +312,21 @@ class PlayState extends FlxState {
     }
 
     public function destroyEnemy (enemy:Enemy) {
-        // TODO: have specific explosion happen per enemy category
-        // TODO: potentially spawn powerup
-        createExplosion(Utils.getSpriteCenter(enemy), enemy.explosionType);
+        var position = Utils.getSpriteCenter(enemy);
+        createExplosion(position, enemy.explosionType);
         points += enemy.points;
         livingEnemies--;
+
+        var results = gameData.checkPoints(points);
+        if (results != null) {
+            // add powerup, auto select() it, add sparkle explosion
+
+            var displayPowerup = new Powerup(position.x - POWERUP_MIDDLE, position.y - POWERUP_MIDDLE, results);
+            add(displayPowerup);
+            displayPowerup.select();
+
+            doPowerup(results);
+        }
     }
 
     public function shoot (x:Float, y:Float, weapon:WeaponType) {
@@ -370,14 +379,49 @@ class PlayState extends FlxState {
         });
     }
 
-    function overlapStorePowerup (powerup:Powerup, _:Player) {
+    function overlapPowerup (powerup:Powerup, _:Player) {
         // buy what we overlap, subtract points.
         // anything we can't buy after the purchase disappears.
         // if it's go, we start the next level.
-        powerup.select();
+        if (!powerup.selected) {
+            powerup.select();
+            doPowerup(powerup.type);
+        }
+    }
 
-        if (powerup.type == Go) {
-            new FlxTimer().start(1, (_:FlxTimer) -> startLevel());
+    function doPowerup(type:PowerupTypes) {
+        switch (type) {
+            case Go:
+                new FlxTimer().start(1, (_:FlxTimer) -> startLevel());
+                return;
+            case Double:
+                for (wep in player.weapons) {
+                    wep.reloadTime = wep.reloadTime / 2;
+                }
+                return;
+            case Clear:
+                return;
+            case Shield:
+                player.shieldPoints += 10;
+                if (player.shieldPoints > 100) {
+                    player.shieldPoints = 100;
+                }
+                return;
+            case Repair:
+                player.hitPoints += 25;
+                if (player.hitPoints > 100) {
+                    player.hitPoints = 100;
+                }
+                return;
+            case ForwardTrips:
+                player.weapons.push({ type: PlayerBall, shootTime: 0, reloadTime: 2 });
+                return;
+            case MidTrips:
+                return;
+            case SideTrips:
+                return;
+            case Backshoot:
+                return;
         }
     }
 }

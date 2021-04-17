@@ -76,9 +76,9 @@ class Store extends FlxGroup {
 
     public function createStore () {
         this.visible = true;
-        scene.storePowerups.visible = true;
+        scene.powerups.visible = true;
 
-        scene.storePowerups.add(new Powerup(powerupPosStart.x, powerupPosStart.y, Go));
+        scene.powerups.add(new Powerup(powerupPosStart.x, powerupPosStart.y, Go));
 
         var points = scene.points;
         var tripsAdded = false;
@@ -86,7 +86,7 @@ class Store extends FlxGroup {
         for (pUp in 0...3) {
             if (pUp == 0 && points > Powerup.dict[Double].cost) {
                 doubleAdded = true;
-                scene.add(new Powerup(powerupPos2.x, powerupPos2.y, Double));
+                scene.powerups.add(new Powerup(powerupPos2.x, powerupPos2.y, Double));
             }
 
             // check 'next up' trips
