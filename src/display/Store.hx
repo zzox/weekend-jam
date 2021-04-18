@@ -63,15 +63,14 @@ class Store extends FlxGroup {
         text3.text = '';
         add(text3);
 
-        bg3 = new FlxSprite(106, 168);
-        bg3.makeGraphic(GRAPHIC_WIDTH, GRAPHIC_HEIGHT, Const.HUD_BACKGROUND_COLOR);
-        add(bg3);
+        startBg = new FlxSprite(106, 168);
+        startBg.makeGraphic(GRAPHIC_WIDTH, GRAPHIC_HEIGHT, Const.HUD_BACKGROUND_COLOR);
+        add(startBg);
 
-        text3 = new FlxBitmapText(fontAngelCode);
-        text3.setPosition(106, 198);
-        text3.text = 'NEXT LEVEL';
-        trace(text3.width);
-        add(text3);
+        startText = new FlxBitmapText(fontAngelCode);
+        startText.setPosition(106, 198);
+        startText.text = 'NEXT LEVEL';
+        add(startText);
     }
 
     public function createStore () {

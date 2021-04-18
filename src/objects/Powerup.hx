@@ -1,6 +1,7 @@
 package objects;
 
 import flixel.FlxSprite;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
 enum PowerupTypes {
@@ -58,7 +59,7 @@ class Powerup extends FlxSprite {
 
     public function select ():PowerupTypes {
         selected = true;
-        FlxTween.tween(scale, { x: 0 }, 0.5, { onComplete: (_:FlxTween) -> this.kill() });
+        FlxTween.tween(scale, { x: 0 }, 0.5, { onComplete: (_:FlxTween) -> this.kill(), ease: FlxEase.cubeIn });
         return type;
     }
 }
