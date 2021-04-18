@@ -7,12 +7,14 @@ class Game {
 
     static var pointPowerups = [
         { points: 1000, type: Double },
-        { points: 5000, type: Shield },
+        { points: 5000, type: ForwardTrips },
         { points: 10000, type: Double },
-        { points: 25000, type: MidTrips },
-        { points: 50000, type: Clear },
+        { points: 50000, type: MidTrips },
         { points: 100000, type: Double },
-        { points: 1000000, type: Double }
+        { points: 500000, type: SideTrips },
+        { points: 1000000, type: Double },
+        { points: 5000000, type: Backshoot },
+        { points: 10000000, type: Double }
     ];
 
     public function new (scene:PlayState) {
@@ -23,7 +25,7 @@ class Game {
     public function checkPoints (points:Int): Null<PowerupTypes> {
         var currentPowerup = pointPowerups[0];
         if (currentPowerup != null && points >= currentPowerup.points) {
-            pointPowerups.splice(0, 1);
+            pointPowerups.shift();
             return currentPowerup.type;
         }
 

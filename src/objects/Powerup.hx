@@ -5,7 +5,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
 enum PowerupTypes {
-    Go;
     Double;
     ForwardTrips;
     MidTrips;
@@ -25,16 +24,15 @@ class Powerup extends FlxSprite {
     public var type:PowerupTypes;
     public var selected:Bool;
 
-    public static final dict:Map<PowerupTypes, PowerupData> = [
-        Go => { animation: 'go' },
-        Clear => { cost: 5000, animation: 'clear' },
-        Shield => { cost: 10000, animation: 'shield' },
-        Repair => { cost: 50000, animation: 'repair' },
-        ForwardTrips => { cost: 50000, animation: 'forward-trips' },
-        MidTrips => { cost: 50000, animation: 'mid-trips' },
-        Backshoot => { cost: 75000, animation: 'back-shoot' },
-        SideTrips => { cost: 100000, animation: 'side-trips' },
-        Double => { animation: 'double' }
+    public static final dict:Map<PowerupTypes, String> = [
+        Clear => 'clear',
+        Shield => 'shield',
+        Repair => 'repair',
+        ForwardTrips => 'forward-trips',
+        MidTrips => 'mid-trips',
+        Backshoot => 'back-shoot',
+        SideTrips => 'side-trips',
+        Double => 'double'
     ];
 
     public function new (x:Float, y:Float, type:PowerupTypes) {
@@ -52,14 +50,14 @@ class Powerup extends FlxSprite {
         animation.add('shield', [6]);
         animation.add('clear', [7]);
         animation.add('repair', [8]);
-        animation.play(dict[type].animation);
+        animation.play(dict[type]);
 
         selected = false;
     }
 
     public function select ():PowerupTypes {
         selected = true;
-        FlxTween.tween(scale, { x: 0 }, 0.5, { onComplete: (_:FlxTween) -> this.kill(), ease: FlxEase.cubeIn });
+        FlxTween.tween(scale, { x: 0 }, 0.75, { onComplete: (_:FlxTween) -> this.kill(), ease: FlxEase.quartIn });
         return type;
     }
 }

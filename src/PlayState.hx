@@ -11,7 +11,6 @@ import data.Weapons;
 import display.Background;
 import display.Explosion;
 import display.HUD;
-import display.Store;
 import flixel.FlxState;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -27,7 +26,6 @@ import objects.Powerup;
 enum GameState {
     Playing;
     MainMenu;
-    StoreState;
     GameOver;
 }
 
@@ -69,8 +67,6 @@ class PlayState extends FlxState {
     var hud:HUD;
     var banner:Banner;
 
-    var store:Store;
-
     override public function create() {
         super.create();
 
@@ -88,10 +84,6 @@ class PlayState extends FlxState {
 
         background = new Background(this);
         add(background);
-
-        store = new Store(this);
-        store.visible = false;
-        add(store);
 
         player = new Player(PLAYER_START_X, PLAYER_START_Y, this);
         add(player);
@@ -122,6 +114,10 @@ class PlayState extends FlxState {
         }
         add(enemyProjectiles);
 
+        // powerups are under explosions, they last longer
+        powerups = new FlxTypedGroup<Powerup>();
+        add(powerups);
+
         explosions = new FlxTypedGroup<Explosion>(EXPLOSION_POOL_SIZE);
         for (_ in 0...EXPLOSION_POOL_SIZE) {
             var explo = new Explosion();
@@ -133,9 +129,6 @@ class PlayState extends FlxState {
         hud = new HUD(this);
         hud.visible = false;
         add(hud);
-
-        powerups = new FlxTypedGroup<Powerup>();
-        add(powerups);
 
         banner = new Banner();
         add(banner);
@@ -171,8 +164,6 @@ class PlayState extends FlxState {
             if (anyKey) {
                 startLevel();
             }
-        } else if (gameState == StoreState) {
-            FlxG.overlap(powerups, player, overlapPowerup);
         } else if (gameState == GameOver) {
             if (anyKey) {
                 FlxG.switchState(new PlayState());
@@ -199,25 +190,18 @@ class PlayState extends FlxState {
             waveSound.onComplete = () -> loopTime = 0;
         });
         hud.visible = true;
-        store.visible = false;
         powerups.visible = false;
     }
 
     function winLevel () {
         banner.display('L E V E L  C O M P L E T E', TRANSITION_TIME);
 
-        worldIndex++;
-
         // TODO: check if world index is over the level list.
         // If so, win the game
-
         FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME);
+        worldIndex++;
 
-        tweenPlayerToCenter();
-
-        new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
-            ambientSound.volume = 1.0;
-        });
+        startLevel();
     }
 
     public function gameOver () {
@@ -260,7 +244,6 @@ class PlayState extends FlxState {
                 }
 
                 if (waveIndex == world.waves.length) {
-                    gameState = StoreState;
                     winLevel();
                 }
             }
@@ -326,10 +309,8 @@ class PlayState extends FlxState {
 
         var results = gameData.checkPoints(points);
         if (results != null) {
-            // add powerup, auto select() it, add sparkle explosion
-
             var displayPowerup = new Powerup(position.x - POWERUP_MIDDLE, position.y - POWERUP_MIDDLE, results);
-            add(displayPowerup);
+            powerups.add(displayPowerup);
             displayPowerup.select();
 
             doPowerup(results);
@@ -376,30 +357,12 @@ class PlayState extends FlxState {
         FlxTween.tween(player, { y: PLAYER_START_Y }, TRANSITION_TIME, { ease: FlxEase.cubeInOut, onComplete:
             (_:FlxTween) -> {
                 player.inControl = true;
-
-                // TODO: only create store after level is complete
-                if (gameState == StoreState) {
-                    store.createStore();
-                }
             }
         });
     }
 
-    function overlapPowerup (powerup:Powerup, _:Player) {
-        // buy what we overlap, subtract points.
-        // anything we can't buy after the purchase disappears.
-        // if it's go, we start the next level.
-        if (!powerup.selected) {
-            powerup.select();
-            doPowerup(powerup.type);
-        }
-    }
-
     function doPowerup(type:PowerupTypes) {
         switch (type) {
-            case Go:
-                new FlxTimer().start(1, (_:FlxTimer) -> startLevel());
-                return;
             case Double:
                 for (wep in player.weapons) {
                     wep.reloadTime = wep.reloadTime / 2;
