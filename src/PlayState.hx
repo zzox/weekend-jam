@@ -86,7 +86,7 @@ class PlayState extends FlxState {
 
         bgColor = 0xff151515;
 
-        background = new Background();
+        background = new Background(this);
         add(background);
 
         store = new Store(this);
@@ -192,6 +192,7 @@ class PlayState extends FlxState {
 
         tweenPlayerToCenter();
 
+        FlxTween.tween(ambientSound, { volume: 0.0 }, TRANSITION_TIME);
         new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
             // TODO: play song from the level
             waveSound = FlxG.sound.play(AssetPaths.int1__wav, 1, true);
@@ -210,11 +211,18 @@ class PlayState extends FlxState {
         // TODO: check if world index is over the level list.
         // If so, win the game
 
+        FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME);
+
         tweenPlayerToCenter();
+
+        new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
+            ambientSound.volume = 1.0;
+        });
     }
 
     public function gameOver () {
         player = null;
+        waveSound.stop();
         FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME);
         banner.display('G A M E  O V E R');
 
@@ -227,7 +235,6 @@ class PlayState extends FlxState {
         new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
             gameState = GameOver;
             // TODO: game over music? or silence?
-            ambientSound = FlxG.sound.play(AssetPaths.amb1__wav, 1.0, true);
         });
     }
 
@@ -363,7 +370,6 @@ class PlayState extends FlxState {
         background.scrollTween(20);
 
         // TODO: transition sound
-        FlxTween.tween(ambientSound, { volume: 0.0 }, TRANSITION_TIME);
 
         player.inControl = false;
         FlxTween.tween(player, { x: PLAYER_START_X }, TRANSITION_TIME, { ease: FlxEase.cubeOut });
