@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxSprite;
 import display.Banner;
 import actors.Player;
 import actors.Enemy;
@@ -66,6 +67,7 @@ class PlayState extends FlxState {
 
     var hud:HUD;
     var banner:Banner;
+    var logo:FlxSprite;
 
     override public function create() {
         super.create();
@@ -140,6 +142,9 @@ class PlayState extends FlxState {
 
         worldIndex = 0;
         points = 0;
+
+        logo = new FlxSprite(46, 88, AssetPaths.clear_logo__png);
+        add(logo);
     }
 
     override public function update(elapsed:Float) {
@@ -190,6 +195,7 @@ class PlayState extends FlxState {
             waveSound.onComplete = () -> loopTime = 0;
         });
         hud.visible = true;
+        logo.visible = false;
     }
 
     function winLevel () {
@@ -314,6 +320,20 @@ class PlayState extends FlxState {
 
             doPowerup(results);
         }
+
+        if (enemy.type == SmallBlueSquid) {
+            // if there's another powerup, show the new one above it
+            var yPos = position.y - POWERUP_MIDDLE;
+            if (results != null) {
+                yPos = yPos + 16;
+            }
+
+            var displayPowerup = new Powerup(position.x - POWERUP_MIDDLE, yPos, Shield);
+            powerups.add(displayPowerup);
+            displayPowerup.select();
+
+            doPowerup(Shield);
+        }
     }
 
     public function shoot (x:Float, y:Float, weapon:WeaponType) {
@@ -360,6 +380,7 @@ class PlayState extends FlxState {
     }
 
     function doPowerup(type:PowerupTypes) {
+        var weaponType;
         switch (type) {
             case Double:
                 for (wep in player.weapons) {
@@ -381,17 +402,15 @@ class PlayState extends FlxState {
                 }
                 return;
             case ForwardTrips:
-                player.weapons.push({ type: PlayerForwardTrips, shootTime: 0, reloadTime: 1 });
-                return;
+                weaponType = PlayerForwardTrips;
             case MidTrips:
-                player.weapons.push({ type: PlayerMidTrips, shootTime: 0, reloadTime: 1 });
-                return;
+                weaponType = PlayerMidTrips;
             case SideTrips:
-                player.weapons.push({ type: PlayerSideTrips, shootTime: 0, reloadTime: 1 });
-                return;
+                weaponType = PlayerSideTrips;
             case Backshoot:
-                player.weapons.push({ type: PlayerBackshoot, shootTime: 0, reloadTime: 1 });
-                return;
+                weaponType = PlayerBackshoot;
         }
+
+        player.weapons.push({ type: weaponType, shootTime: 0, reloadTime: 1 });
     }
 }

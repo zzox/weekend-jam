@@ -15,6 +15,7 @@ class Enemy extends FlxSprite {
     static inline final CLEAR = 0xffffff;
     static final HURT_FLASHES:Array<Int> = [0, 0, 1, 1, 1, 1];
 
+    public var type:EnemyType;
     var pattern:EnemyPattern;
     var scene:PlayState;
     var name:String;
@@ -46,6 +47,7 @@ class Enemy extends FlxSprite {
 
         flipX = false;
 
+        this.type = type;
         var enemyType = Enemies.data[type];
         offset.set(enemyType.offset.x, enemyType.offset.y);
         setSize(enemyType.size.x, enemyType.size.y);

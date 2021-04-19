@@ -48,8 +48,8 @@ class Powerup extends FlxSprite {
         animation.add('side-trips', [4]);
         animation.add('back-shoot', [5]);
         animation.add('shield', [6]);
-        animation.add('clear', [7]);
-        animation.add('repair', [8]);
+        animation.add('repair', [7]);
+        animation.add('clear', [8]);
         animation.play(dict[type]);
 
         selected = false;
@@ -57,7 +57,7 @@ class Powerup extends FlxSprite {
 
     public function select ():PowerupTypes {
         selected = true;
-        FlxTween.tween(scale, { x: 0 }, 0.75, { onComplete: (_:FlxTween) -> this.kill(), ease: FlxEase.quartIn });
+        FlxTween.tween(scale, { x: 0 }, 1.5, { onComplete: (_:FlxTween) -> this.kill(), ease: FlxEase.quartIn });
         return type;
     }
 }
