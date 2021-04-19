@@ -4,7 +4,10 @@ import flixel.math.FlxPoint;
 
 enum WeaponType {
     PlayerBullet;
-    PlayerBall;
+    PlayerForwardTrips;
+    PlayerMidTrips;
+    PlayerSideTrips;
+    PlayerBackshoot;
     EnemyBullet;
 }
 
@@ -35,14 +38,41 @@ class Weapons {
             velocity: new FlxPoint(0, -240),
             style: PlayerOneShot
         },
-        PlayerBall => {
-            reloadTime: 2,
+        PlayerForwardTrips => {
+            reloadTime: 1,
             animName: 'small-player-ball',
             damage: 1,
             size: new FlxPoint(2, 2),
             offset: new FlxPoint(7, 7),
-            velocity: new FlxPoint(60, -240),
+            velocity: new FlxPoint(60, -180),
             style: PlayerTwoShots
+        },
+        PlayerMidTrips => {
+            reloadTime: 1,
+            animName: 'small-player-ball',
+            damage: 1,
+            size: new FlxPoint(2, 2),
+            offset: new FlxPoint(7, 7),
+            velocity: new FlxPoint(120, -120),
+            style: PlayerTwoShots
+        },
+        PlayerSideTrips => {
+            reloadTime: 1,
+            animName: 'small-player-ball',
+            damage: 1,
+            size: new FlxPoint(2, 2),
+            offset: new FlxPoint(7, 7),
+            velocity: new FlxPoint(240, 0),
+            style: PlayerTwoShots
+        },
+        PlayerBackshoot => {
+            reloadTime: 1,
+            animName: 'small-player-ball',
+            damage: 1,
+            size: new FlxPoint(2, 2),
+            offset: new FlxPoint(7, 7),
+            velocity: new FlxPoint(0, 240),
+            style: PlayerOneShot
         },
         EnemyBullet => {
             reloadTime: 2,

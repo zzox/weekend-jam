@@ -190,7 +190,6 @@ class PlayState extends FlxState {
             waveSound.onComplete = () -> loopTime = 0;
         });
         hud.visible = true;
-        powerups.visible = false;
     }
 
     function winLevel () {
@@ -323,7 +322,6 @@ class PlayState extends FlxState {
         var proj = projectiles.recycle(Projectile);
         proj.shoot(x, y, bullet);
 
-        // TODO: add a bullet duplicate type
         if (bullet.style == PlayerTwoShots) {
             var proj = projectiles.recycle(Projectile);
             proj.shoot(x, y, bullet, { flipXVel: true });        
@@ -383,13 +381,16 @@ class PlayState extends FlxState {
                 }
                 return;
             case ForwardTrips:
-                player.weapons.push({ type: PlayerBall, shootTime: 0, reloadTime: 2 });
+                player.weapons.push({ type: PlayerForwardTrips, shootTime: 0, reloadTime: 1 });
                 return;
             case MidTrips:
+                player.weapons.push({ type: PlayerMidTrips, shootTime: 0, reloadTime: 1 });
                 return;
             case SideTrips:
+                player.weapons.push({ type: PlayerSideTrips, shootTime: 0, reloadTime: 1 });
                 return;
             case Backshoot:
+                player.weapons.push({ type: PlayerBackshoot, shootTime: 0, reloadTime: 1 });
                 return;
         }
     }
