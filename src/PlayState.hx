@@ -253,9 +253,7 @@ class PlayState extends FlxState {
                     winLevel();
                 } else {
                     var displayIndex = waveIndex + 1;
-                    new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
-                        banner.display('W A V E  $displayIndex', WAVE_DISPLAY_TIME);
-                    });
+                    banner.display('W A V E  $displayIndex', WAVE_DISPLAY_TIME);
                 }
             }
         } else {

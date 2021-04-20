@@ -44,13 +44,40 @@ class Waves {
             { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 22 }
         ]]
     }, {
-        bpm: 128,
+        bpm: 140,
         song: AssetPaths.int1__wav,
         visibleStars: ['far-star', 'small-star', 'star-twinkle'],
         waves: [[
             { type: SmallGreenTwin, quantity: 2, shape: TwoMiddle, beats: 0 },
-            { type: SmallRedTwin, quantity: 2, shape: TwoWide, beats: 1 },
-            { type: RedTwinShooter, quantity: 1, shape: OneMiddle, beats: 2 }
+            { type: SmallRedTwin, quantity: 3, shape: FiveWide, beats: 1 },
+            { type: SmallGreenTwin, quantity: 2, shape: TwoWide, beats: 2 },
+            { type: SmallRedTwin, quantity: 4, shape: FiveWide, beats: 3 },
+            { type: SmallGreenTwin, quantity: 2, shape: TwoMiddle, beats: 4 },
+            { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 5 },
+            { type: RedTwinShooter, quantity: 1, shape: OneMiddle, beats: 6 },
+            { type: SmallGreenTwin, quantity: 5, shape: FiveWide, beats: 10 },
+            { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 11 },
+            { type: SmallGreenTwin, quantity: 2, shape: TwoMiddle, beats: 12 },
+            { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 13 },
+            { type: SmallGreenTwin, quantity: 2, shape: TwoMiddle, beats: 14 },
+            { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 15 },
+            { type: RedTwinShooter, quantity: 2, shape: TwoWide, beats: 16 }
+        ], [
+            { type: SmallGreenTwin, quantity: 3, shape: ThreeMiddle, beats: 0 },
+            { type: SmallRedTwin, quantity: 3, shape: FiveWide, beats: 1 },
+            { type: SmallGreenTwin, quantity: 3, shape: ThreeMiddle, beats: 2 },
+            { type: SmallRedTwin, quantity: 4, shape: FiveWide, beats: 3 },
+            { type: SmallGreenTwin, quantity: 3, shape: ThreeMiddle, beats: 4 },
+            { type: RedTwinShooter, quantity: 1, shape: OneMiddle, beats: 5 },
+            { type: SmallRedTwin, quantity: 5, shape: FiveWide, beats: 6 },
+            { type: RedTwinShooter, quantity: 3, shape: ThreeMiddle, beats: 7 },
+            { type: SmallGreenTwin, quantity: 5, shape: FiveWide, beats: 8 },
+            { type: RedTwinShooter, quantity: 3, shape: FiveWide, beats: 9 },
+            { type: SmallGreenTwin, quantity: 5, shape: TwoMiddle, beats: 10 },
+            { type: RedTwinShooter, quantity: 3, shape: FiveWide, beats: 11 },
+            { type: SmallGreenTwin, quantity: 5, shape: TwoMiddle, beats: 12 },
+            { type: RedTwinShooter, quantity: 3, shape: ThreeMiddle, beats: 13 },
+            { type: GreenTwinShooter, quantity: 5, shape: FiveWide, beats: 14 }
         ]]
     }];
 }

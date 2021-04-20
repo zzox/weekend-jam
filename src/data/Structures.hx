@@ -10,6 +10,7 @@ enum EnemyStructure {
     TwoWide;
     TwoFarMiddle;
     ThreeMiddle;
+    ThreeWide;
     FiveWide;
 }
 
@@ -22,6 +23,7 @@ class Structures {
         TwoWide => [.125, .875],
         TwoFarMiddle => [-.5, 1.5],
         ThreeMiddle => [.35, .5, .65],
+        ThreeWide => [.16, .5, .84],
         FiveWide => [0, .25, .5, .75, 1]
     ];
 

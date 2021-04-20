@@ -8,6 +8,7 @@ enum EnemyType {
     SmallGreenTwin;
     SmallBlueSquid;
     RedTwinShooter;
+    GreenTwinShooter;
 }
 
 enum EnemyPattern {
@@ -75,7 +76,7 @@ class Enemies {
         },
         RedTwinShooter => {
             name: "red-twin-shooter",
-            points: 2000,
+            points: 750,
             hitPoints: 3,
             collisionDamage: 20,
             offset:  new FlxPoint(6, 9),
@@ -94,6 +95,30 @@ class Enemies {
                 shootTime: 0,
                 reloadTime: 2,
                 position: new FlxPoint(9, 7),
+                type: EnemyBullet
+            }]
+        },
+        GreenTwinShooter => {
+            name: "green-twin-shooter",
+            points: 1000,
+            hitPoints: 3,
+            collisionDamage: 20,
+            offset:  new FlxPoint(6, 9),
+            size: new FlxPoint(12, 7),
+            pattern: Direct,
+            yVel: 60,
+            explosionType: 'explode-medium',
+            shooters: [{
+                offset: 1,
+                shootTime: 0,
+                reloadTime: 2,
+                position: new FlxPoint(1, 8),
+                type: EnemyBullet
+            }, {
+                offset: 0,
+                shootTime: 0,
+                reloadTime: 2,
+                position: new FlxPoint(9, 8),
                 type: EnemyBullet
             }]
         }
