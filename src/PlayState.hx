@@ -38,6 +38,7 @@ class PlayState extends FlxState {
     static inline final PLAYER_START_Y = 200;
     static inline final PLAYER_RESPAWN_Y = 300;
     static inline final TRANSITION_TIME = 3.0;
+    static inline final WAVE_DISPLAY_TIME = 1.5;
     static inline final POWERUP_MIDDLE = 6;
 
     public var gameState:GameState;
@@ -59,7 +60,6 @@ class PlayState extends FlxState {
 
     public var livingEnemies:Int;
     var subwavesDone:Bool;
-    var levelComplete:Bool;
 
     var ambientSound:FlxSound;
     var waveSound:FlxSound;
@@ -193,6 +193,7 @@ class PlayState extends FlxState {
             // TODO: play song from the level
             waveSound = FlxG.sound.play(AssetPaths.int1__wav, 1, true);
             waveSound.onComplete = () -> loopTime = 0;
+            banner.display('W A V E  1', WAVE_DISPLAY_TIME);
         });
         hud.visible = true;
         logo.visible = false;
@@ -250,6 +251,11 @@ class PlayState extends FlxState {
 
                 if (waveIndex == world.waves.length) {
                     winLevel();
+                } else {
+                    var displayIndex = waveIndex + 1;
+                    new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
+                        banner.display('W A V E  $displayIndex', WAVE_DISPLAY_TIME);
+                    });
                 }
             }
         } else {
