@@ -1,5 +1,6 @@
 package;
 
+import SoundEffects;
 import flixel.FlxSprite;
 import display.Banner;
 import actors.Player;
@@ -69,6 +70,8 @@ class PlayState extends FlxState {
     var hud:HUD;
     var banner:Banner;
     var logo:FlxSprite;
+
+    var soundEffects:Null<SoundEffects>;
 
     override public function create() {
         super.create();
@@ -152,6 +155,7 @@ class PlayState extends FlxState {
     }
 
     override public function update(elapsed:Float) {
+        soundEffects = new SoundEffects();
         super.update(elapsed);
 
         var anyKey:Bool = false;
@@ -178,6 +182,9 @@ class PlayState extends FlxState {
                 FlxG.switchState(new PlayState());
             }
         }
+
+        soundEffects.playAll();
+        soundEffects = null;
     }
 
     function startLevel () {
@@ -365,6 +372,7 @@ class PlayState extends FlxState {
 
     public function shoot (x:Float, y:Float, weapon:WeaponType) {
         var bullet = Weapons.data[weapon];
+        soundEffects.add(bullet.animName, 0.5);
 
         var proj = projectiles.recycle(Projectile);
         proj.shoot(x, y, bullet);
@@ -377,6 +385,7 @@ class PlayState extends FlxState {
 
     public function enemyShoot (x:Float, y:Float, weapon:WeaponType) {
         var bullet = Weapons.data[weapon];
+        soundEffects.add(bullet.animName, 0.5);
 
         var proj = enemyProjectiles.recycle(Projectile);
         proj.shoot(x, y, bullet);
@@ -388,6 +397,8 @@ class PlayState extends FlxState {
     }
 
     public function createExplosion (point:FlxPoint, type:String) {
+        soundEffects.add(type, 1.0);
+
         explosions.recycle(Explosion)
             .explode(point.x, point.y, type);
     }
@@ -396,6 +407,7 @@ class PlayState extends FlxState {
         background.scrollTween(20);
 
         // TODO: transition sound
+        FlxG.sound.play(AssetPaths.hyperspeed__wav, 0.5);
 
         player.inControl = false;
         FlxTween.tween(player, { x: PLAYER_START_X }, TRANSITION_TIME, { ease: FlxEase.cubeOut });
