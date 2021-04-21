@@ -39,6 +39,7 @@ class Enemy extends FlxSprite {
         animation.add("small-green-twin", [3, 4, 5], 12);
         animation.add("small-blue-squid", [6, 7, 8], 12);
         animation.add("red-twin-shooter", [9, 10, 11], 12);
+        animation.add("green-twin-shooter", [12, 13, 14], 12);
     }
 
     public function start (x:Float, y:Float, type:EnemyType) {

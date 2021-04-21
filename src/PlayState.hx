@@ -33,7 +33,7 @@ enum GameState {
 class PlayState extends FlxState {
     static inline final ENEMY_POOL_SIZE = 100;
     static inline final PROJ_POOL_SIZE = 1000;
-    static inline final EXPLOSION_POOL_SIZE = 20;
+    static inline final EXPLOSION_POOL_SIZE = 1000;
     public static inline final PLAYER_START_X = 77;
     static inline final PLAYER_START_Y = 200;
     static inline final PLAYER_RESPAWN_Y = 300;
@@ -63,7 +63,8 @@ class PlayState extends FlxState {
 
     var ambientSound:FlxSound;
     var waveSound:FlxSound;
-    var loopTime:Float = 0.0;
+    var loopTime:Float;
+    var fadingOut:Bool;
 
     var hud:HUD;
     var banner:Banner;
@@ -143,6 +144,9 @@ class PlayState extends FlxState {
         worldIndex = 0;
         points = 0;
 
+        loopTime = 0;
+        fadingOut = false;
+
         logo = new FlxSprite(46, 88, AssetPaths.clear_logo__png);
         add(logo);
     }
@@ -190,24 +194,43 @@ class PlayState extends FlxState {
 
         FlxTween.tween(ambientSound, { volume: 0.0 }, TRANSITION_TIME);
         new FlxTimer().start(TRANSITION_TIME, (_:FlxTimer) -> {
-            // TODO: play song from the level
-            waveSound = FlxG.sound.play(AssetPaths.int1__wav, 1, true);
-            waveSound.onComplete = () -> loopTime = 0;
+            // allows `PlayWaveSound` to play the next song
+            fadingOut = false;
+
+            playWaveSound();
             banner.display('W A V E  1', WAVE_DISPLAY_TIME);
         });
         hud.visible = true;
         logo.visible = false;
     }
 
+    function playWaveSound () {
+        loopTime = 0;
+        if (waveSound != null) {
+            waveSound.stop();
+        }
+
+        if (Waves.data[worldIndex].songs[waveIndex] != null && !fadingOut) {
+            waveSound = FlxG.sound.play(Waves.data[worldIndex].songs[waveIndex], 1, true);
+            waveSound.onComplete = playWaveSound;
+        }
+    }
+
     function winLevel () {
         banner.display('L E V E L  C O M P L E T E', TRANSITION_TIME);
 
-        // TODO: check if world index is over the level list.
-        // If so, win the game
-        FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME);
+        // signifies to not play the next song yet.
+        fadingOut = true;
+        FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME / 2, { onComplete: (_:FlxTween) -> {
+            waveSound.stop();
+        } });
         worldIndex++;
 
-        startLevel();
+        if (Waves.data[worldIndex] != null) {
+            startLevel();
+        } else {
+            trace('Game won!');
+        }
     }
 
     public function gameOver () {
@@ -216,7 +239,7 @@ class PlayState extends FlxState {
         FlxTween.tween(waveSound, { volume: 0.0 }, TRANSITION_TIME);
         banner.display('G A M E  O V E R');
 
-        new FlxTimer().start(1.5, (_:FlxTimer) -> {
+        new FlxTimer().start(TRANSITION_TIME / 2, (_:FlxTimer) -> {
             // show score
             // TODO: check high score?
             hud.visible = false;

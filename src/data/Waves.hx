@@ -13,7 +13,7 @@ class Waves {
 
     public static final data = [{
         bpm: 128,
-        song: AssetPaths.int1__wav,
+        songs: [AssetPaths.int1__wav, AssetPaths.int1__wav, AssetPaths.int1__wav],
         visibleStars: ['far-star'],
         waves: [[
             { type: SmallRedTwin, quantity: 1, shape: OneMiddle, beats: 0 },
@@ -45,7 +45,7 @@ class Waves {
         ]]
     }, {
         bpm: 140,
-        song: AssetPaths.int1__wav,
+        songs: [AssetPaths.int2_1__wav, AssetPaths.int2_2__wav],
         visibleStars: ['far-star', 'small-star', 'star-twinkle'],
         waves: [[
             { type: SmallGreenTwin, quantity: 2, shape: TwoMiddle, beats: 0 },

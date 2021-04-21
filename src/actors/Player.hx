@@ -64,8 +64,8 @@ class Player extends FlxSprite {
             down: 0
         };
 
-        drag.set(1800, 1200);
-        maxVelocity.set(180, 120);
+        drag.set(1200, 1200);
+        maxVelocity.set(120, 120);
 
         shieldPoints = 10;
         hitPoints = 100;

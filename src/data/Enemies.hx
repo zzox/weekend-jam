@@ -109,15 +109,15 @@ class Enemies {
             yVel: 60,
             explosionType: 'explode-medium',
             shooters: [{
-                offset: 1,
+                offset: 0.5,
                 shootTime: 0,
-                reloadTime: 2,
+                reloadTime: 1,
                 position: new FlxPoint(1, 8),
                 type: EnemyBullet
             }, {
                 offset: 0,
                 shootTime: 0,
-                reloadTime: 2,
+                reloadTime: 1,
                 position: new FlxPoint(9, 8),
                 type: EnemyBullet
             }]
